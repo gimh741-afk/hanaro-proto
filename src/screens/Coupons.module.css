@@ -1,0 +1,100 @@
+/* Figma: B3-2 쿠폰 (41:1139), B3-3 쿠폰 받음 (41:1269) — 배경 gray-100 */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--gray-100);
+}
+
+/* header — pt12 pb4 */
+.header {
+  padding: 12px var(--side) 4px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+/* summary — pt10 pb14 gap6 */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px var(--side) 14px;
+}
+
+.summaryTitle {
+  display: flex;
+  gap: 4px;
+  font-size: var(--fs-title-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.summaryCount {
+  color: var(--green-600);
+}
+
+.summaryNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+/* segment — 3칸, pt6 gap8, 밑줄 2px */
+.segment {
+  display: flex;
+  padding: 0 var(--side);
+}
+
+.tab {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-top: 6px;
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-regular);
+  color: var(--gray-500);
+  white-space: nowrap;
+}
+
+.tab::after {
+  content: '';
+  align-self: stretch;
+  height: 2px;
+  background: var(--gray-200);
+}
+
+.tab[aria-selected='true'] {
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.tab[aria-selected='true']::after {
+  background: var(--ink-900);
+}
+
+.tab:focus-visible {
+  outline-offset: -2px;
+}
+
+/* coupon-list — pt16 gap12 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px var(--side) 0;
+}
+
+.empty {
+  padding: 48px var(--side);
+  font-size: var(--fs-body-2);
+  color: var(--gray-700);
+  text-align: center;
+}

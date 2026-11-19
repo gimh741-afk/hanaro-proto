@@ -1,0 +1,88 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+import chevLeft from '../assets/icons/chev-left.svg';
+import locationIcon from '../assets/icons/location.svg';
+import searchIcon from '../assets/icons/search.svg';
+import { StatusBar } from '../components/StatusBar';
+import { StoreRow } from '../components/StoreRow';
+import { useToast } from '../components/Toast';
+import { STORES, type Store } from '../data/stores';
+import { useAppState } from '../state/AppStateContext';
+import styles from './Stores.module.css';
+
+/** B1-2 단골 매장 고르기 → 매장을 누르면 단골이 바뀌고 홈으로 (동작 규칙 1, B1-3) */
+export default function Stores() {
+  const { favoriteStore, setFavoriteStore } = useAppState();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showToast = useToast();
+
+  // 현재 단골을 뺀 나머지를 가까운 순으로
+  const nearby = STORES.filter((s) => s.id !== favoriteStore.id).sort((a, b) => a.distanceKm - b.distanceKm);
+
+  const goBack = () => {
+    // 주소로 바로 들어온 경우(이전 기록 없음)에는 홈으로
+    if (location.key === 'default') navigate('/');
+    else navigate(-1);
+  };
+
+  const handleSelect = (store: Store) => {
+    if (store.id !== favoriteStore.id) {
+      setFavoriteStore(store.id);
+      showToast(
+        store.eventStatus === 'active'
+          ? `${store.name} 행사를 먼저 보여드릴게요`
+          : `${store.name} 행사가 올라오면 알려드릴게요` /* Figma에 없는 경우 — COPY_TODO.md */,
+      );
+    }
+    navigate('/');
+  };
+
+  return (
+    <div className={styles.screen}>
+      <StatusBar />
+
+      <div className={styles.nav}>
+        <button type="button" className={styles.back} aria-label="뒤로 가기" onClick={goBack}>
+          <img src={chevLeft} width={26} height={26} alt="" />
+        </button>
+        <h1 className={styles.title}>단골 매장 고르기</h1>
+      </div>
+
+      <div className={styles.searchWrap}>
+        <button type="button" className={styles.search} onClick={() => showToast('준비 중이에요')}>
+          <img src={searchIcon} width={20} height={20} alt="" />
+          매장 이름이나 동네로 찾아보세요
+        </button>
+      </div>
+      <p className={styles.hint}>예) 양재동, 서초농협</p>
+
+      <section className={styles.current} aria-labelledby="stores-current">
+        <h2 id="stores-current" className={styles.sectionTitle}>
+          현재 단골 매장
+        </h2>
+        <StoreRow store={favoriteStore} isCurrent onSelect={handleSelect} />
+      </section>
+
+      <section className={styles.nearby} aria-labelledby="stores-nearby">
+        <div className={styles.nearbyHead}>
+          <h2 id="stores-nearby" className={styles.sectionTitle}>
+            내 주변 매장
+          </h2>
+          <p className={styles.locationNote}>
+            <img src={locationIcon} width={14} height={14} alt="" />
+            현재 위치 기준
+          </p>
+        </div>
+        <ul className={styles.list}>
+          {nearby.map((store) => (
+            <li key={store.id}>
+              <StoreRow store={store} onSelect={handleSelect} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <p className={styles.footnote}>‘행사 준비 중’ 매장도 단골로 정하면 행사가 올라올 때 알려드려요</p>
+    </div>
+  );
+}

@@ -1,0 +1,58 @@
+/* Figma: TabBar (39:531) — 390×84, 보더 상단 1px, 5칸(78px) 가운데 정렬 */
+.tabBar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--white);
+  border-top: 1px solid var(--gray-200);
+}
+
+.fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  /* 보더 1px 포함해서 아이콘 top = 11px */
+  padding-top: 10px;
+  min-height: var(--touch-min);
+  font-size: var(--fs-tabbar);
+  font-weight: var(--fw-regular);
+  color: var(--gray-500);
+  white-space: nowrap;
+}
+
+.tab.active {
+  font-weight: var(--fw-medium);
+  color: var(--green-600);
+}
+
+/* 가운데 바코드: 52px 원형 FAB, 탭바 위로 15px 솟아 있음 */
+.center {
+  margin-top: -26px; /* 10px - (-15px) - 보더 1px */
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.fab {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 26px;
+  background: var(--green-600);
+  box-shadow: var(--shadow-fab);
+}
+
+.tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: var(--radius-8);
+}

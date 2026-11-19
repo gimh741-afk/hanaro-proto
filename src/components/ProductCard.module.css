@@ -1,0 +1,96 @@
+/* Figma: ProductCard (39:532) — 167 폭, 이미지 정사각 radius 14, 세로 gap 6 */
+.card {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-radius: var(--radius-14);
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-14);
+  background: var(--gray-200);
+}
+
+/* 원본 사진을 Figma와 같은 비율로 잘라 보여 준다 (left/top/width/height는 인라인 style) */
+.photo {
+  position: absolute;
+  max-width: none;
+}
+
+.badge {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  padding: 2px 7px;
+  border-radius: var(--radius-6);
+  background: var(--yellow-400);
+  color: var(--ink-900);
+  font-size: var(--fs-tabbar);
+  font-weight: var(--fw-medium);
+}
+
+.name {
+  font-size: var(--fs-body-2);
+  color: var(--ink-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: var(--fs-head);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.rate {
+  color: var(--green-600);
+}
+
+.amount {
+  color: var(--ink-900);
+}
+
+.caption {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 찜 버튼: 보이는 원은 30px, 터치 영역은 44px */
+.like {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: 50%;
+}
+
+.like::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.like img {
+  position: relative;
+}

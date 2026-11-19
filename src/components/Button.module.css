@@ -1,0 +1,38 @@
+/* Figma: Button (39:550) — 350×52, radius 14, 16px Medium */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 52px;
+  padding: 0 20px;
+  border-radius: var(--radius-14);
+  font-size: var(--fs-button);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.block {
+  display: flex;
+  width: 100%;
+}
+
+.primary {
+  background: var(--green-600);
+  color: var(--white);
+}
+
+.secondary {
+  background: var(--white);
+  color: var(--ink-900);
+  border: 1px solid var(--gray-200);
+}
+
+.tint {
+  background: var(--green-50);
+  color: var(--green-600);
+}
+
+.button:disabled {
+  opacity: 0.5;
+}

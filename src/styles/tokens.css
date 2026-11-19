@@ -1,0 +1,57 @@
+/* 디자인 토큰 — CLAUDE.md "디자인 토큰" 기준. 값을 바꿀 땐 CLAUDE.md도 함께 고친다. */
+:root {
+  /* Color */
+  --green-600: #12a150;
+  --green-700: #0b8a42;
+  --green-50: #e9f7ef;
+  --ink-900: #191f1c;
+  --gray-700: #4a524e;
+  --gray-500: #8a918d;
+  --gray-300: #d9ddda;
+  --gray-100: #f3f5f4;
+  --white: #ffffff;
+  --yellow-100: #fff4cc; /* 상품 뱃지 */
+
+  /* Figma 컴포넌트 보드(39:395)에서 쓰는데 CLAUDE.md 토큰에 없는 값 */
+  --gray-200: #e3e7e4; /* 카드·탭바 보더, 상품 이미지 자리 */
+  --yellow-400: #ffc93c; /* ProductCard 뱃지 실제 색 */
+  --toast-bg: rgba(25, 31, 28, 0.94);
+  --red-50: #fdeded; /* 상세 "6일 남음" 배경 */
+  --red-500: #e5484d; /* 상세 "6일 남음" 글자 */
+  --dim: rgba(25, 31, 28, 0.5); /* 바텀시트 뒤 배경 */
+  --shadow-fab: 0 4px 10px rgba(23, 163, 74, 0.3);
+
+  /* Radius · spacing */
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-14: 14px;
+  --radius-16: 16px;
+  --radius-18: 18px;
+  --side: 20px;
+
+  /* Typography — Title 24/20, Head 17, Body 15·14, Caption 13·12, TabBar 11 */
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --fs-title-1: 24px;
+  --fs-title-2: 20px;
+  --fs-head: 17px;
+  --fs-body-1: 15px;
+  --fs-body-2: 14px;
+  --fs-caption-1: 13px;
+  --fs-caption-2: 12px;
+  --fs-tabbar: 11px;
+  --fs-button: 16px; /* Button 컴포넌트 */
+  --fs-coupon-amount: 19px; /* CouponCard 금액 */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* Sizing */
+  --tabbar-height: 84px;
+  --statusbar-height: 47px;
+  --button-height: 48px;
+  --touch-min: 44px;
+  --frame-width: 390px;
+  --frame-height: 844px;
+}

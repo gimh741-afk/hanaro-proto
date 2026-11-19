@@ -1,0 +1,132 @@
+/* 개발용 메뉴 — 테스트 진행자용. 앱 화면과 구분되도록 어두운 머리글을 쓴다 */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: flex-end;
+  background: var(--dim);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 88%;
+  border-radius: 20px 20px 0 0;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--side);
+  background: var(--ink-900);
+  color: var(--white);
+}
+
+.headTitle {
+  font-size: var(--fs-head);
+  font-weight: var(--fw-medium);
+}
+
+.close {
+  min-height: var(--touch-min);
+  padding: 0 4px;
+  font-size: var(--fs-body-2);
+  color: var(--white);
+  text-decoration: underline;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px var(--side) calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupTitle {
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+  color: var(--gray-700);
+}
+
+.state {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--gray-100);
+  font-size: var(--fs-caption-1);
+}
+
+.state dt {
+  color: var(--gray-700);
+}
+
+.state dd {
+  color: var(--ink-900);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.row > button {
+  flex: 1 1 140px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.urls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.url {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: var(--touch-min);
+  padding: 0 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-12);
+  font-size: var(--fs-caption-1);
+  text-align: left;
+}
+
+.url code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--ink-900);
+}
+
+.urlHint {
+  flex-shrink: 0;
+  color: var(--gray-700);
+}
+
+.devLink {
+  font-size: var(--fs-caption-1);
+  color: var(--green-700);
+  text-decoration: underline;
+}

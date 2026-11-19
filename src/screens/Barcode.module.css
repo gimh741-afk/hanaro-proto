@@ -1,0 +1,144 @@
+/* Figma: B3-4 바코드 (41:1405) */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+/* header — pt12 pb4 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--side) 4px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.storePill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: var(--radius-14);
+  background: var(--green-50);
+  color: var(--green-600);
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+/* barcode-card — 바깥 pt14, 안쪽 pt26 pb22 px20 gap12 */
+.cardWrap {
+  padding: 14px var(--side) 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 26px 20px 22px;
+  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.number {
+  font-size: var(--fs-body-1);
+  color: var(--ink-900);
+  font-variant-numeric: tabular-nums;
+}
+
+.brightness {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+/* applied — pt22 gap10 */
+.applied {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px var(--side) 0;
+}
+
+.appliedTitle {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-14);
+  background: var(--gray-100);
+}
+
+.rowIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.rowText {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.rowSub {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: var(--radius-8);
+  background: var(--green-50);
+  color: var(--green-600);
+  font-size: var(--fs-tabbar);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.badgeMuted {
+  background: var(--white);
+  color: var(--gray-700);
+}
+
+.footnote {
+  padding: 14px var(--side) 0;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}

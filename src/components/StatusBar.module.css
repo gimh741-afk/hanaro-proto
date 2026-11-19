@@ -1,0 +1,32 @@
+/* Figma: StatusBar (39:396) — 390×47. 데스크톱 프레임 안에서만 보인다. */
+.statusBar {
+  /* 화면을 스크롤해도 맨 위에 남는다 */
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: var(--statusbar-height);
+  background: var(--white);
+  flex-shrink: 0;
+}
+
+.time {
+  position: absolute;
+  left: 30px;
+  top: 14px;
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.icons {
+  position: absolute;
+  right: 24px;
+  top: 17px;
+}
+
+/* 실제 휴대폰에서는 기기 상태 표시줄이 있으니 숨긴다 (PhoneFrame과 같은 600px 기준) */
+@media (max-width: 599px) {
+  .statusBar {
+    display: none;
+  }
+}

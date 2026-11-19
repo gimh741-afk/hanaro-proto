@@ -1,0 +1,217 @@
+/* Figma: B2-3 감귤 상세 (41:965) — 탭바 대신 하단 CTA 88px */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(88px + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+/* nav — pl12 pr20 py10 */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--side) 10px 12px;
+}
+
+.navButton {
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  margin: -9px;
+  border-radius: 50%;
+}
+
+.navButton.like {
+  margin: -10px;
+}
+
+/* image — 390×300 */
+.hero {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  background: var(--gray-200);
+}
+
+.hero img {
+  position: absolute;
+  max-width: none;
+}
+
+/* content — pt18 px20 gap10 */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px var(--side) 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+.badge {
+  padding: 2px 7px;
+  border-radius: var(--radius-6);
+  background: var(--yellow-400);
+  color: var(--ink-900);
+  font-size: var(--fs-tabbar);
+  font-weight: var(--fw-medium);
+}
+
+.name {
+  font-size: 21px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.price {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.priceMain {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 26px;
+  font-weight: var(--fw-medium);
+}
+
+.rate {
+  color: var(--green-600);
+}
+
+.amount {
+  color: var(--ink-900);
+}
+
+.priceNote {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+/* breakdown — 정가 → 할인 → 내가 내는 가격 */
+.breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-14);
+  background: var(--gray-100);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-caption-1);
+}
+
+.row dt {
+  color: var(--gray-700);
+}
+
+.row dd {
+  margin: 0;
+  color: var(--ink-900);
+}
+
+.rule {
+  height: 1px;
+  background: var(--gray-200);
+}
+
+.total {
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+}
+
+.total dt {
+  color: var(--ink-900);
+}
+
+.total dd {
+  color: var(--green-600);
+}
+
+/* period */
+.period {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-14);
+}
+
+.period img {
+  flex-shrink: 0;
+}
+
+.periodText {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.periodLabel {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+.periodValue {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.daysLeft {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: var(--radius-8);
+  background: var(--red-50);
+  color: var(--red-500);
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+/* bottom-cta — 88px, pt12 pb24 px20 gap10 */
+.cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: calc(88px + env(safe-area-inset-bottom, 0px));
+  padding: 12px var(--side) calc(24px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--gray-200);
+  background: var(--white);
+}
+
+.likeButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-14);
+  background: var(--white);
+}
+
+.ctaMain {
+  flex: 1 0 0;
+  min-width: 0;
+}

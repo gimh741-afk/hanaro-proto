@@ -1,0 +1,201 @@
+/* Figma: B0-2 / B2-2 이번 주 행사 (40:507, 41:843), S-2 빈 상태 (41:1539) */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+/* header — pt12 pb4 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px var(--side) 4px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  margin: -10px;
+  border-radius: 50%;
+}
+
+/* info — pt4 pb12 */
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px var(--side) 12px;
+}
+
+.storePeriod {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-caption-1);
+  color: var(--ink-900);
+  white-space: nowrap;
+}
+
+.flyer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+  white-space: nowrap;
+}
+
+.flyer::after {
+  content: '';
+  position: absolute;
+  inset: -15px -8px;
+}
+
+/* updated-bar — py8 */
+.updatedBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px var(--side);
+  background: var(--green-50);
+  font-size: var(--fs-caption-2);
+  color: var(--green-600);
+}
+
+/* chips — pt14 pb6, gap8, 가로 스크롤 */
+.chips {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px var(--side) 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+/* sort — py10 */
+.sort {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--side);
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.sortButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.sortButton::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}
+
+/* grid — 2열 167px, 가로 16 / 세로 22 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 22px;
+  padding: 0 var(--side);
+}
+
+/* ---------- S-2 빈 상태 ---------- */
+
+/* empty — pt40 pb28 px24 gap10 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 24px 28px;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  background: var(--gray-100);
+}
+
+.emptyTitle {
+  font-size: 18px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.emptySub {
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.notifyButton {
+  width: 220px;
+  height: 46px;
+}
+
+.divider {
+  height: 8px;
+  background: var(--gray-100);
+}
+
+/* nearby — pt18 gap10 */
+.nearby {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px var(--side) 0;
+}
+
+.nearbyTitle {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.nearbyList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nationwide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  align-self: flex-start;
+  margin-top: 6px;
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+  color: var(--green-600);
+}
+
+.nationwide::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}

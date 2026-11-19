@@ -1,0 +1,103 @@
+/* Figma: B1-2 단골 매장 고르기 (40:745) — 탭바 없음 */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+/* nav — pl12 pr20 py10 gap8, 뒤로 26px */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px var(--side) 10px 12px;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  margin: -9px;
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+/* search — pt6 pb10, 안쪽 py13 */
+.searchWrap {
+  padding: 6px var(--side) 10px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: var(--radius-14);
+  background: var(--gray-100);
+  font-size: var(--fs-body-1);
+  color: var(--gray-500);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.search img {
+  flex-shrink: 0;
+}
+
+.hint {
+  padding: 0 var(--side) 6px;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-500);
+}
+
+/* current — pt14 pb6 gap10 / nearby — pt18 gap10 */
+.current,
+.nearby {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px var(--side) 6px;
+}
+
+.nearby {
+  padding: 18px var(--side) 0;
+}
+
+.sectionTitle {
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.nearbyHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.locationNote {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-caption-2);
+  color: var(--green-600);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footnote {
+  padding: 14px var(--side) 0;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}

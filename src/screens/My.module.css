@@ -1,0 +1,73 @@
+/* MY — Figma 기준 페이지에 디자인 없음. 다른 탭 화면(헤더 22px, 좌우 20)과 컴포넌트 토큰으로 구성 */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+.header {
+  padding: 12px var(--side) 4px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px var(--side) 0;
+}
+
+.sectionTitle {
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.menu {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-14);
+  overflow: hidden;
+}
+
+.menuItem + .menuItem {
+  border-top: 1px solid var(--gray-200);
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  font-size: var(--fs-body-1);
+  color: var(--ink-900);
+  text-align: left;
+}
+
+.menuLabel {
+  flex: 1 0 0;
+}
+
+.menuValue {
+  font-size: var(--fs-body-2);
+  color: var(--gray-700);
+}
+
+.menuButton:focus-visible {
+  outline-offset: -2px;
+}
+
+.version {
+  padding: 28px var(--side) 0;
+  font-size: var(--fs-caption-2);
+  color: var(--gray-500);
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+}

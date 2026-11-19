@@ -1,0 +1,77 @@
+/* Figma: StoreRow (39:662) — padding 14/16, gap 12, radius 14 */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-14);
+  background: var(--white);
+  text-align: left;
+}
+
+.current {
+  /* 현재 단골은 보더 없이 64px (Figma 그대로) */
+  border-width: 0;
+  background: var(--green-50);
+}
+
+.pin {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  background: var(--gray-100);
+}
+
+.current .pin {
+  background: var(--green-600);
+}
+
+.info {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.meta {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: var(--radius-8);
+  font-size: var(--fs-tabbar);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.badgeActive {
+  background: var(--green-50);
+  color: var(--green-600);
+}
+
+.badgePreparing {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.badgeCurrent {
+  color: var(--green-600);
+}

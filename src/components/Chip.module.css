@@ -1,0 +1,20 @@
+/* Figma: B0-2 chips (40:563) — px14 py8, radius 18, 13px */
+.chip {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: 18px;
+  background: var(--white);
+  color: var(--gray-700);
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-regular);
+  white-space: nowrap;
+}
+
+/* 선택: 보더 없이 32px (Figma 그대로, 나머지는 보더 포함 34px) */
+.selected {
+  border-width: 0;
+  background: var(--ink-900);
+  color: var(--white);
+  font-weight: var(--fw-medium);
+}

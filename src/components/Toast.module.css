@@ -1,0 +1,51 @@
+/* Figma: Toast (39:626) — padding 13/18, radius 16, check 16 + 14px Regular */
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: var(--radius-16);
+  background: var(--toast-bg);
+  color: var(--white);
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-regular);
+  white-space: nowrap;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+/* 화면 안 위치: B1-3 / B3-3 기준 탭바 위 27px(화면 아래에서 111px), 가운데 */
+.region {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--tabbar-height) + 27px + env(safe-area-inset-bottom, 0px));
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--side);
+  pointer-events: none;
+}
+
+.enter {
+  animation: toast-in 200ms ease-out;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
