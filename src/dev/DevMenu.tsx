@@ -9,9 +9,9 @@ import { useAppState } from '../state/AppStateContext';
 import styles from './DevMenu.module.css';
 
 const MAZE_URLS = [
-  { query: '?start=guest', hint: 'T0 비회원' },
-  { query: '?start=member', hint: 'T1–T3 회원' },
-  { query: '?start=member&scenario=auth-fail', hint: 'S-1 인증 실패' },
+  { query: '?start=guest', hint: '비회원으로 시작' },
+  { query: '?start=member', hint: '회원으로 시작' },
+  { query: '?start=member&scenario=auth-fail', hint: '인증 실패 화면 보기' },
   { query: '?reset=1', hint: '저장 상태 지우기' },
 ];
 
@@ -84,25 +84,25 @@ export function DevMenu({ onClose }: { onClose: () => void }) {
           </section>
 
           <section className={styles.group}>
-            <h3 className={styles.groupTitle}>Maze 시작 상태 (신촌점 · 쿠폰 미수령)</h3>
+            <h3 className={styles.groupTitle}>테스트 시작 상태 (신촌점 · 쿠폰 미수령)</h3>
             <div className={styles.row}>
               <Button
                 variant="secondary"
                 onClick={() => {
                   app.startAs('guest');
-                  done('T0 비회원 상태로 시작해요');
+                  done('비회원 상태로 시작해요');
                 }}
               >
-                T0 비회원
+                비회원으로 시작
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => {
                   app.startAs('member');
-                  done('T1–T3 회원 상태로 시작해요');
+                  done('회원 상태로 시작해요');
                 }}
               >
-                T1–T3 회원
+                회원으로 시작
               </Button>
             </div>
           </section>

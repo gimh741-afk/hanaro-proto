@@ -11,3 +11,16 @@ export function daysUntil(iso: string, today: string = DEMO_TODAY): number {
   const ms = Date.parse(`${iso}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`);
   return Math.round(ms / 86_400_000);
 }
+
+/** '2025-11-27T09:00' → '11월 27일' (갱신일 표시) */
+export function formatMonthDay(isoDateTime: string): string {
+  const [, month, day] = isoDateTime.slice(0, 10).split('-').map(Number);
+  return `${month}월 ${day}일`;
+}
+
+/** '2025-11-27T09:00' → '오전 9시' */
+export function formatHour(isoDateTime: string): string {
+  const hour = Number(isoDateTime.slice(11, 13));
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+  return `${hour < 12 ? '오전' : '오후'} ${hour12}시`;
+}

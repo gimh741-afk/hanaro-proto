@@ -1,6 +1,6 @@
 export type StoreId = 'sinchon' | 'yangjae' | 'seocho' | 'umyeon' | 'naegok';
 
-/** active = 행사 중, preparing = 행사 준비 중(행사 목록 빈 상태, S-2) */
+/** active = 이번 주 전단 있음, preparing = 이번 주 전단 미등록(행사 목록 빈 상태, S-2) */
 export type StoreEventStatus = 'active' | 'preparing';
 
 export interface Store {
@@ -9,6 +9,11 @@ export interface Store {
   district: string;
   distanceKm: number;
   eventStatus: StoreEventStatus;
+  /**
+   * 매장이 전단(행사)을 마지막으로 올린 시각. 로컬 시각 ISO(YYYY-MM-DDTHH:mm).
+   * 행사 있음 매장은 이번 주 갱신일, 전단 미등록 매장은 지난주 마지막 갱신일이다 (가상 데이터).
+   */
+  updatedAt: string;
 }
 
 /** 이번 주 행사 기간. 요일이 맞는 연도(2025)로 ISO 날짜를 적어 둔다. */
@@ -19,23 +24,23 @@ export const EVENT_PERIOD = {
   startLabel: '11.27(목)',
   /** 홈 "11.27 새 행사가 올라왔어요" */
   startShort: '11.27',
-  /** 행사 목록 "신촌점이 11.27(목) 오전 9시에 올린 행사예요" */
-  postedLabel: '11.27(목) 오전 9시',
 } as const;
 
+// prettier-ignore
 export const STORES: Store[] = [
-  { id: 'sinchon', name: '신촌점', district: '서대문구', distanceKm: 6.8, eventStatus: 'active' },
-  { id: 'yangjae', name: '양재점', district: '서초구', distanceKm: 1.2, eventStatus: 'active' },
-  { id: 'seocho', name: '서초점', district: '서초구', distanceKm: 2.0, eventStatus: 'active' },
-  { id: 'umyeon', name: '우면점', district: '서초구', distanceKm: 2.8, eventStatus: 'preparing' },
-  { id: 'naegok', name: '내곡점', district: '서초구', distanceKm: 4.1, eventStatus: 'preparing' },
+  { id: 'sinchon', name: '신촌점', district: '서대문구', distanceKm: 6.8, eventStatus: 'active', updatedAt: '2025-11-27T09:00' },
+  { id: 'yangjae', name: '양재점', district: '서초구', distanceKm: 1.2, eventStatus: 'active', updatedAt: '2025-11-27T09:00' },
+  { id: 'seocho', name: '서초점', district: '서초구', distanceKm: 2.0, eventStatus: 'active', updatedAt: '2025-11-27T09:00' },
+  { id: 'umyeon', name: '우면점', district: '서초구', distanceKm: 2.8, eventStatus: 'preparing', updatedAt: '2025-11-20T09:00' },
+  { id: 'naegok', name: '내곡점', district: '서초구', distanceKm: 4.1, eventStatus: 'preparing', updatedAt: '2025-11-20T09:00' },
 ];
 
 export const DEFAULT_STORE_ID: StoreId = 'sinchon';
 
+/** 매장 행 배지 (B1-2 내 주변 매장, S-2 근처 매장) */
 export const STORE_EVENT_STATUS_LABEL: Record<StoreEventStatus, string> = {
-  active: '행사 중',
-  preparing: '행사 준비 중',
+  active: '행사 있음',
+  preparing: '전단 미등록',
 };
 
 export function getStore(id: StoreId): Store {

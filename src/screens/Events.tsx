@@ -15,11 +15,12 @@ import { useToast } from '../components/Toast';
 import { PRODUCTS, TOTAL_EVENT_PRODUCT_COUNT } from '../data/products';
 import { EVENT_PERIOD, getNearbyEventStores, type Store } from '../data/stores';
 import { useAppState } from '../state/AppStateContext';
+import { formatHour, formatMonthDay } from '../utils/date';
 import styles from './Events.module.css';
 
 const CATEGORIES = ['전체', '신선식품', '가공식품', '생활용품'] as const;
 
-/** B0-2(비회원) · B2-2(회원) 이번 주 행사 — 두 화면은 같다. 행사 준비 중 매장이면 S-2 빈 상태. */
+/** B0-2(비회원) · B2-2(회원) 이번 주 행사 — 두 화면은 같다. 전단 미등록 매장이면 S-2 빈 상태. */
 export default function Events() {
   const { isLoggedIn, favoriteStore } = useAppState();
   const showToast = useToast();
@@ -53,9 +54,11 @@ export default function Events() {
         <PreparingState />
       ) : (
         <>
+          {/* 갱신일: 매장 데이터 updatedAt에서 읽는다. 기존 안내 바 한 줄 안에 넣어 아래 버튼 위치는 그대로 */}
           <p className={styles.updatedBar}>
             <img src={dotIcon} width={6} height={6} alt="" />
-            {favoriteStore.name}이 {EVENT_PERIOD.postedLabel}에 올린 행사예요
+            {formatMonthDay(favoriteStore.updatedAt)} 갱신 · {favoriteStore.name}이{' '}
+            {formatHour(favoriteStore.updatedAt)}에 올린 행사예요
           </p>
 
           <div className={styles.chips} role="group" aria-label="상품 분류">
@@ -111,7 +114,13 @@ function PreparingState() {
           <br />
           준비하고 있어요
         </h2>
-        <p className={styles.emptySub}>행사가 올라오면 바로 알려드릴게요</p>
+        <div className={styles.emptyText}>
+          <p className={styles.emptySub}>행사가 올라오면 바로 알려드릴게요</p>
+          {/* 마지막 갱신일 (매장 데이터 updatedAt). 한 줄에 들어가도록 문구를 줄였다 — COPY_TODO.md */}
+          <p className={styles.lastUpdated}>
+            아직 이번 주 전단이 없어요 · 마지막 갱신 {formatMonthDay(favoriteStore.updatedAt)}
+          </p>
+        </div>
         <Button
           variant="tint"
           block={false}

@@ -111,7 +111,7 @@ function GuestBenefitCard() {
         이번 주 12,480명이 받아 갔어요
       </p>
       <button type="button" className={styles.loginButton} onClick={handleLogin}>
-        3초 만에 로그인
+        간편 로그인
       </button>
       <p className={styles.benefitNote}>행사는 로그인 없이 둘러볼 수 있어요</p>
     </div>

@@ -9,7 +9,11 @@ import { STORES, type Store } from '../data/stores';
 import { useAppState } from '../state/AppStateContext';
 import styles from './Stores.module.css';
 
-/** B1-2 단골 매장 고르기 → 매장을 누르면 단골이 바뀌고 홈으로 (동작 규칙 1, B1-3) */
+/**
+ * B1-2 단골 매장 고르기 (동작 규칙 1)
+ * - 행사 있음 매장 → 단골 변경 후 홈으로 + 토스트 (B1-3, Maze 성공 경로 그대로)
+ * - 전단 미등록 매장 → 단골 설정은 막지 않고, 바로 이번 주 행사 탭의 빈 상태(S-2)로 이어 준다
+ */
 export default function Stores() {
   const { favoriteStore, setFavoriteStore } = useAppState();
   const navigate = useNavigate();
@@ -26,15 +30,16 @@ export default function Stores() {
   };
 
   const handleSelect = (store: Store) => {
+    const hasFlyer = store.eventStatus === 'active';
     if (store.id !== favoriteStore.id) {
       setFavoriteStore(store.id);
       showToast(
-        store.eventStatus === 'active'
+        hasFlyer
           ? `${store.name} 행사를 먼저 보여드릴게요`
-          : `${store.name} 행사가 올라오면 알려드릴게요` /* Figma에 없는 경우 — COPY_TODO.md */,
+          : `${store.name}을 단골 매장으로 정했어요` /* 전단 미등록 매장 — COPY_TODO.md */,
       );
     }
-    navigate('/');
+    navigate(hasFlyer ? '/' : '/events');
   };
 
   return (
@@ -82,7 +87,7 @@ export default function Stores() {
         </ul>
       </section>
 
-      <p className={styles.footnote}>‘행사 준비 중’ 매장도 단골로 정하면 행사가 올라올 때 알려드려요</p>
+      <p className={styles.footnote}>‘전단 미등록’ 매장도 단골로 정하면 전단이 올라올 때 알려드려요</p>
     </div>
   );
 }
