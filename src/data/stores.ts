@@ -9,11 +9,6 @@ export interface Store {
   district: string;
   distanceKm: number;
   eventStatus: StoreEventStatus;
-  /**
-   * 매장이 전단(행사)을 마지막으로 올린 시각. 로컬 시각 ISO(YYYY-MM-DDTHH:mm).
-   * 행사 있음 매장은 이번 주 갱신일, 전단 미등록 매장은 지난주 마지막 갱신일이다 (가상 데이터).
-   */
-  updatedAt: string;
 }
 
 /** 이번 주 행사 기간. 요일이 맞는 연도(2025)로 ISO 날짜를 적어 둔다. */
@@ -22,17 +17,15 @@ export const EVENT_PERIOD = {
   end: '2025-12-03',
   label: '11.27(목) – 12.03(수)',
   startLabel: '11.27(목)',
-  /** 홈 "11.27 새 행사가 올라왔어요" */
-  startShort: '11.27',
 } as const;
 
 // prettier-ignore
 export const STORES: Store[] = [
-  { id: 'sinchon', name: '신촌점', district: '서대문구', distanceKm: 6.8, eventStatus: 'active', updatedAt: '2025-11-27T09:00' },
-  { id: 'yangjae', name: '양재점', district: '서초구', distanceKm: 1.2, eventStatus: 'active', updatedAt: '2025-11-27T09:00' },
-  { id: 'seocho', name: '서초점', district: '서초구', distanceKm: 2.0, eventStatus: 'active', updatedAt: '2025-11-27T09:00' },
-  { id: 'umyeon', name: '우면점', district: '서초구', distanceKm: 2.8, eventStatus: 'preparing', updatedAt: '2025-11-20T09:00' },
-  { id: 'naegok', name: '내곡점', district: '서초구', distanceKm: 4.1, eventStatus: 'preparing', updatedAt: '2025-11-20T09:00' },
+  { id: 'sinchon', name: '신촌점', district: '서대문구', distanceKm: 6.8, eventStatus: 'active' },
+  { id: 'yangjae', name: '양재점', district: '서초구', distanceKm: 1.2, eventStatus: 'active' },
+  { id: 'seocho', name: '서초점', district: '서초구', distanceKm: 2.0, eventStatus: 'active' },
+  { id: 'umyeon', name: '우면점', district: '서초구', distanceKm: 2.8, eventStatus: 'preparing' },
+  { id: 'naegok', name: '내곡점', district: '서초구', distanceKm: 4.1, eventStatus: 'preparing' },
 ];
 
 export const DEFAULT_STORE_ID: StoreId = 'sinchon';

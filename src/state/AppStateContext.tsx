@@ -13,12 +13,23 @@ import { DEFAULT_STORE_ID, getStore, isStoreId, type Store, type StoreId } from 
 /* 상태 모양                                                            */
 /* ------------------------------------------------------------------ */
 
-export type Scenario = 'auth-fail';
+/** auth-fail = 로그인 실패(S-1), flyer-fail = 담당자가 올린 전단에서 글자를 읽지 못함(M-1 실패 경로) */
+export type Scenario = 'auth-fail' | 'flyer-fail';
+
+function toScenario(value: unknown): Scenario | null {
+  return value === 'auth-fail' || value === 'flyer-fail' ? value : null;
+}
+
+export type PublishedFlyer = 'items' | 'image';
 
 export interface AppState {
   isLoggedIn: boolean;
+  /** 매장 담당자 계정 (MY > 매장 관리가 보인다). 실제 인증은 없다. */
+  isManager: boolean;
   favoriteStoreId: StoreId;
   claimedCouponIds: CouponId[];
+  /** 담당자가 이번 주 전단을 고객에게 게시한 방식 — items: 정리된 상품으로, image: 전단 이미지 그대로 (M-1 최근 올린 전단 목록) */
+  publishedFlyer: PublishedFlyer | null;
   /** `?scenario=auth-fail` 처럼 URL로 들어온 테스트 시나리오. 라우트 이동 뒤에도 기억한다. */
   scenario: Scenario | null;
 }
@@ -28,8 +39,10 @@ const STORAGE_KEY = 'hanaro-proto:v1';
 function createDefaultState(overrides: Partial<AppState> = {}): AppState {
   return {
     isLoggedIn: false,
+    isManager: false,
     favoriteStoreId: DEFAULT_STORE_ID,
     claimedCouponIds: [],
+    publishedFlyer: null,
     scenario: null,
     ...overrides,
   };
@@ -48,9 +61,11 @@ function loadStoredState(): AppState | null {
     const p = parsed as Record<string, unknown>;
     return createDefaultState({
       isLoggedIn: p.isLoggedIn === true,
+      isManager: p.isLoggedIn === true && p.isManager === true,
       favoriteStoreId: isStoreId(p.favoriteStoreId) ? p.favoriteStoreId : DEFAULT_STORE_ID,
       claimedCouponIds: Array.isArray(p.claimedCouponIds) ? p.claimedCouponIds.filter(isCouponId) : [],
-      scenario: p.scenario === 'auth-fail' ? 'auth-fail' : null,
+      publishedFlyer: p.publishedFlyer === 'items' || p.publishedFlyer === 'image' ? p.publishedFlyer : null,
+      scenario: toScenario(p.scenario),
     });
   } catch {
     return null;
@@ -84,7 +99,9 @@ function clearStoredState() {
  * - `?reset=1`        localStorage를 지우고 기본 상태(비회원 · 신촌점 · 쿠폰 미수령)로 시작
  * - `?start=guest`    T0: 비회원 · 신촌점 단골 · 쿠폰 미수령
  * - `?start=member`   T1–T3: 회원 · 신촌점 단골 · 쿠폰 미수령
+ * - `?start=manager`  신촌점 담당자 계정 (MY > 매장 관리 → 전단 올리기 흐름 시연용)
  * - `?scenario=auth-fail`  로그인 시 /auth/recover로 보내는 시나리오를 켠다
+ * - `?scenario=flyer-fail` 담당자가 올린 전단에서 글자를 읽지 못하는 실패 경로를 켠다
  *
  * 처리한 `start`, `reset`, `scenario` 파라미터는 주소에서 지워서 새로고침해도 진행 상황이 초기화되지 않게 한다.
  */
@@ -95,13 +112,13 @@ export function resolveInitialState(): AppState {
   const reset = params.get('reset') === '1';
   const start = params.get('start');
   const scenarioParam = params.get('scenario');
-  const scenario: Scenario | null = scenarioParam === 'auth-fail' ? 'auth-fail' : null;
+  const scenario = toScenario(scenarioParam);
 
   if (reset) clearStoredState();
 
   let state: AppState;
-  if (start === 'guest' || start === 'member') {
-    state = createDefaultState({ isLoggedIn: start === 'member', scenario });
+  if (start === 'guest' || start === 'member' || start === 'manager') {
+    state = createDefaultState({ isLoggedIn: start !== 'guest', isManager: start === 'manager', scenario });
   } else if (reset) {
     state = createDefaultState({ scenario });
   } else {
@@ -144,7 +161,9 @@ export interface AppStateValue extends AppState {
   /** 저장된 상태를 지우고 기본 상태로 되돌린다 (개발용 메뉴) */
   resetAll: () => void;
   /** 개발용 메뉴: Maze 시작 상태로 (신촌점 단골, 쿠폰 미수령, 시나리오 꺼짐) — `?start=`와 같다 */
-  startAs: (kind: 'guest' | 'member') => void;
+  startAs: (kind: 'guest' | 'member' | 'manager') => void;
+  /** M-2(정리된 상품) 또는 M-1 실패 경로(이미지 그대로)에서 이번 주 전단을 고객에게 게시 */
+  publishFlyer: (how: PublishedFlyer) => void;
   /** 개발용 메뉴: 상태 일부를 바로 바꾼다 */
   patchState: (patch: Partial<AppState>) => void;
 }
@@ -159,7 +178,7 @@ export function AppStateProvider({ initialState, children }: { initialState: App
   }, [state]);
 
   const login = useCallback(() => setState((s) => ({ ...s, isLoggedIn: true })), []);
-  const logout = useCallback(() => setState((s) => ({ ...s, isLoggedIn: false })), []);
+  const logout = useCallback(() => setState((s) => ({ ...s, isLoggedIn: false, isManager: false })), []);
   const setFavoriteStore = useCallback((id: StoreId) => setState((s) => ({ ...s, favoriteStoreId: id })), []);
   const claimCoupon = useCallback(
     (id: CouponId) =>
@@ -172,9 +191,11 @@ export function AppStateProvider({ initialState, children }: { initialState: App
     setState(createDefaultState());
   }, []);
   const startAs = useCallback(
-    (kind: 'guest' | 'member') => setState(createDefaultState({ isLoggedIn: kind === 'member' })),
+    (kind: 'guest' | 'member' | 'manager') =>
+      setState(createDefaultState({ isLoggedIn: kind !== 'guest', isManager: kind === 'manager' })),
     [],
   );
+  const publishFlyer = useCallback((how: PublishedFlyer) => setState((s) => ({ ...s, publishedFlyer: how })), []);
   const patchState = useCallback((patch: Partial<AppState>) => setState((s) => ({ ...s, ...patch })), []);
 
   const value = useMemo<AppStateValue>(() => {
@@ -193,9 +214,10 @@ export function AppStateProvider({ initialState, children }: { initialState: App
       clearScenario,
       resetAll,
       startAs,
+      publishFlyer,
       patchState,
     };
-  }, [state, login, logout, setFavoriteStore, claimCoupon, clearScenario, resetAll, startAs, patchState]);
+  }, [state, login, logout, setFavoriteStore, claimCoupon, clearScenario, resetAll, startAs, publishFlyer, patchState]);
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

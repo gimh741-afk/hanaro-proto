@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import chevRight from '../assets/icons/chev-right.svg';
 import { StatusBar } from '../components/StatusBar';
-import { StoreRow } from '../components/StoreRow';
 import { TabBar } from '../components/TabBar';
 import { useToast } from '../components/Toast';
 import { MEMBER } from '../data/member';
@@ -14,12 +13,19 @@ const APP_VERSION = '1.0.0';
 const DEV_TAPS = 5;
 const DEV_TAP_WINDOW_MS = 1500;
 
+interface MenuItem {
+  label: string;
+  value?: string;
+  onClick: () => void;
+}
+
 /**
- * MY — Figma에 디자인이 없어 최소 구성. 문구는 COPY_TODO.md 검토 대상.
+ * MY 탭 — 하위 메뉴: 단골 매장 · 포인트 · 영수증 · 관심상품 (포트폴리오 IA TO-BE).
+ * 담당자 계정일 때만 목록 맨 아래에 "매장 관리"가 보인다 → M-1 전단 올리기.
  * 맨 아래 버전 글자를 1.5초 안에 5번 누르면 개발용 메뉴가 열린다 (Maze 테스트 지원).
  */
 export default function My() {
-  const { isLoggedIn, favoriteStore, myCoupons, logout } = useAppState();
+  const { isLoggedIn, isManager, favoriteStore } = useAppState();
   const navigate = useNavigate();
   const showToast = useToast();
   const [devOpen, setDevOpen] = useState(false);
@@ -36,26 +42,16 @@ export default function My() {
     }
   };
 
+  // 포인트·영수증·관심상품은 다음 화면이 없어 "준비 중이에요" (CLAUDE.md 작업 원칙)
   const soon = () => showToast('준비 중이에요');
 
-  const items: { label: string; value?: string; onClick: () => void }[] = [
-    { label: 'NH포인트', value: `${MEMBER.nhPoint}P`, onClick: soon },
-    { label: '내 쿠폰', value: `${myCoupons.length}장`, onClick: () => navigate('/coupons') },
-    { label: '찜한 행사상품', value: `${MEMBER.wishlistCount}개`, onClick: soon },
-    { label: '멤버십 바코드', onClick: () => navigate('/barcode') },
+  const items: MenuItem[] = [
+    { label: '단골 매장', value: favoriteStore.name, onClick: () => navigate('/stores') },
+    { label: '포인트', value: `${MEMBER.nhPoint}P`, onClick: soon },
+    { label: '영수증', onClick: soon },
+    { label: '관심상품', value: `${MEMBER.wishlistCount}개`, onClick: soon },
   ];
-
-  const settings: { label: string; onClick: () => void }[] = [
-    { label: '알림 설정', onClick: soon },
-    {
-      label: '로그아웃',
-      onClick: () => {
-        logout();
-        showToast('로그아웃했어요');
-        navigate('/');
-      },
-    },
-  ];
+  if (isManager) items.push({ label: '매장 관리', onClick: () => navigate('/manage') });
 
   return (
     <div className={styles.screen}>
@@ -65,25 +61,18 @@ export default function My() {
         <h1 className={styles.title}>MY</h1>
       </header>
 
-      <section className={styles.section} aria-labelledby="my-store">
-        <h2 id="my-store" className={styles.sectionTitle}>
-          단골 매장
-        </h2>
-        <StoreRow store={favoriteStore} isCurrent onSelect={() => navigate('/stores')} />
-      </section>
-
-      <section className={styles.section} aria-labelledby="my-benefits">
-        <h2 id="my-benefits" className={styles.sectionTitle}>
-          내 혜택
-        </h2>
-        <MenuList items={items} />
-      </section>
-
-      <section className={styles.section} aria-labelledby="my-settings">
-        <h2 id="my-settings" className={styles.sectionTitle}>
-          설정
-        </h2>
-        <MenuList items={settings} />
+      <section className={styles.section}>
+        <ul className={styles.menu}>
+          {items.map((it) => (
+            <li key={it.label} className={styles.menuItem}>
+              <button type="button" className={styles.menuButton} onClick={it.onClick}>
+                <span className={styles.menuLabel}>{it.label}</span>
+                {it.value && <span className={styles.menuValue}>{it.value}</span>}
+                <img src={chevRight} width={16} height={16} alt="" />
+              </button>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* 개발용 메뉴 진입점: 일부러 버튼으로 드러내지 않는다 */}
@@ -94,21 +83,5 @@ export default function My() {
       <TabBar />
       {devOpen && <DevMenu onClose={() => setDevOpen(false)} />}
     </div>
-  );
-}
-
-function MenuList({ items }: { items: { label: string; value?: string; onClick: () => void }[] }) {
-  return (
-    <ul className={styles.menu}>
-      {items.map((it) => (
-        <li key={it.label} className={styles.menuItem}>
-          <button type="button" className={styles.menuButton} onClick={it.onClick}>
-            <span className={styles.menuLabel}>{it.label}</span>
-            {it.value && <span className={styles.menuValue}>{it.value}</span>}
-            <img src={chevRight} width={16} height={16} alt="" />
-          </button>
-        </li>
-      ))}
-    </ul>
   );
 }

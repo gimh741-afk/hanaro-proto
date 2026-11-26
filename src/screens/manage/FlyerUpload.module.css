@@ -1,0 +1,203 @@
+/* M-1 매장 관리 · 전단 올리기 — Figma 초안(257.4폭)을 390폭으로 환산(×1.515) */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(var(--tabbar-height) + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px var(--side) 0;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.account {
+  font-size: var(--fs-caption-1);
+  color: var(--gray-500);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px var(--side) 0;
+}
+
+.sectionTitle {
+  font-size: var(--fs-head);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.sectionTitle.small {
+  font-size: var(--fs-body-1);
+}
+
+/* 업로드 칸 — 350×260, 점선 그린 테두리, 연한 민트 */
+.upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 260px;
+  padding: 28px 20px;
+  border: 1.5px dashed var(--green-600);
+  border-radius: 20px;
+  background: var(--green-50);
+  text-align: center;
+}
+
+.uploadIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 8px;
+}
+
+.uploadIcon img:first-child {
+  position: absolute;
+  inset: 0;
+}
+
+.uploadIcon img:last-child {
+  position: relative;
+}
+
+.uploadTitle {
+  font-size: var(--fs-head);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.uploadSub {
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.fileButton {
+  min-width: 160px;
+  height: var(--touch-min);
+  margin-top: 12px;
+  padding: 0 20px;
+  border: 1.5px solid var(--green-600);
+  border-radius: var(--radius-12);
+  background: var(--white);
+  color: var(--green-700);
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+}
+
+.fileInput {
+  display: none;
+}
+
+/* 정리하는 중 */
+.spinner {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  border: 3px solid var(--white);
+  border-top-color: var(--green-600);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2400ms;
+  }
+}
+
+/* 실패 경로 — 주황 테두리로 바꾸고 다음 행동을 버튼으로 */
+.upload.failed {
+  border-color: var(--orange-500);
+  background: var(--orange-50);
+}
+
+.failedActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
+  margin-top: 12px;
+}
+
+.textButton {
+  min-height: var(--touch-min);
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+  color: var(--gray-700);
+  text-decoration: underline;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px;
+  border-radius: var(--radius-12);
+  background: var(--surface-100);
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.historyRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 0 15px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-14);
+}
+
+.historyText {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.historyTitle {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.historySub {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-500);
+}
+
+.chip {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--green-50);
+  color: var(--green-700);
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+}

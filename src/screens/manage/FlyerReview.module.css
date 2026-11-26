@@ -1,0 +1,187 @@
+/* M-2 정리된 상품 확인 — Figma 초안(257.4폭)을 390폭으로 환산(×1.515). 탭바 대신 하단 게시 버튼 */
+.screen {
+  min-height: 100%;
+  padding-bottom: calc(132px + 24px + env(safe-area-inset-bottom, 0px));
+  background: var(--white);
+}
+
+/* nav — B1-2 단골 매장 고르기와 같은 뒤로 가기 줄 */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px var(--side) 10px 12px;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  margin: -9px;
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+/* summary — 연한 민트, radius 18 */
+.summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 6px var(--side) 0;
+  padding: 20px;
+  border-radius: var(--radius-18);
+  background: var(--green-50);
+}
+
+.summaryTitle {
+  font-size: var(--fs-title-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.summarySub {
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.warnChip {
+  margin-top: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--orange-50);
+  color: var(--orange-500);
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  padding: 18px var(--side) 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 var(--side);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 0 4px 0 13px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-12);
+  background: var(--white);
+}
+
+.row.issue {
+  border-color: transparent;
+  background: var(--orange-50);
+}
+
+.rowText {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rowName {
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.rowSub {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-700);
+}
+
+.issue .rowSub {
+  color: var(--orange-500);
+}
+
+.ok {
+  display: grid;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+}
+
+.editButton {
+  min-width: var(--touch-min);
+  height: var(--touch-min);
+  padding: 0 12px;
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+  color: var(--orange-500);
+}
+
+.empty {
+  padding: 40px var(--side);
+  font-size: var(--fs-body-2);
+  color: var(--gray-700);
+  text-align: center;
+}
+
+/* 하단 고정 — 안내 한 줄 + 게시 버튼 */
+.cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px var(--side) calc(20px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--gray-200);
+  background: var(--white);
+}
+
+.ctaNote {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-500);
+  text-align: center;
+}
+
+/* 수정 시트 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.input {
+  height: 52px;
+  padding: 0 14px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-12);
+  font-size: var(--fs-body-1);
+  color: var(--ink-900);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 0;
+  border-color: transparent;
+}
+
+.sheetSub {
+  font-size: var(--fs-body-2);
+  color: var(--gray-700);
+}

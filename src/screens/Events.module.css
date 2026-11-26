@@ -62,17 +62,6 @@
   inset: -15px -8px;
 }
 
-/* updated-bar — py8 */
-.updatedBar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px var(--side);
-  background: var(--green-50);
-  font-size: var(--fs-caption-2);
-  color: var(--green-600);
-}
-
 /* chips — pt14 pb6, gap8, 가로 스크롤 */
 .chips {
   display: flex;
@@ -147,22 +136,9 @@
   color: var(--ink-900);
 }
 
-/* 설명 + 마지막 갱신일을 한 묶음으로 (간격 4px) — 아래 버튼이 덜 밀리게 */
-.emptyText {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .emptySub {
   font-size: var(--fs-caption-1);
   color: var(--gray-700);
-}
-
-.lastUpdated {
-  font-size: var(--fs-caption-2);
-  color: var(--gray-700);
-  white-space: nowrap;
 }
 
 .notifyButton {

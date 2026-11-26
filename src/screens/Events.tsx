@@ -1,5 +1,4 @@
 import chevRightGreen from '../assets/icons/chev-right-14-green.svg';
-import dotIcon from '../assets/icons/dot-green.svg';
 import image14 from '../assets/icons/image-14.svg';
 import image30 from '../assets/icons/image-30.svg';
 import pinIcon from '../assets/icons/pin-16-green.svg';
@@ -15,7 +14,7 @@ import { useToast } from '../components/Toast';
 import { PRODUCTS, TOTAL_EVENT_PRODUCT_COUNT } from '../data/products';
 import { EVENT_PERIOD, getNearbyEventStores, type Store } from '../data/stores';
 import { useAppState } from '../state/AppStateContext';
-import { formatHour, formatMonthDay } from '../utils/date';
+import { getDiscountLines } from '../utils/discounts';
 import styles from './Events.module.css';
 
 const CATEGORIES = ['전체', '신선식품', '가공식품', '생활용품'] as const;
@@ -54,13 +53,6 @@ export default function Events() {
         <PreparingState />
       ) : (
         <>
-          {/* 갱신일: 매장 데이터 updatedAt에서 읽는다. 기존 안내 바 한 줄 안에 넣어 아래 버튼 위치는 그대로 */}
-          <p className={styles.updatedBar}>
-            <img src={dotIcon} width={6} height={6} alt="" />
-            {formatMonthDay(favoriteStore.updatedAt)} 갱신 · {favoriteStore.name}이{' '}
-            {formatHour(favoriteStore.updatedAt)}에 올린 행사예요
-          </p>
-
           <div className={styles.chips} role="group" aria-label="상품 분류">
             {CATEGORIES.map((c) => (
               <Chip key={c} selected={c === '전체'} onClick={c === '전체' ? undefined : soon}>
@@ -80,7 +72,7 @@ export default function Events() {
           <ul className={styles.grid}>
             {PRODUCTS.map((p) => (
               <li key={p.id}>
-                <ProductCard product={p} />
+                <ProductCard product={p} conditions={getDiscountLines(p, favoriteStore.id)} />
               </li>
             ))}
           </ul>
@@ -110,17 +102,11 @@ function PreparingState() {
           <img src={image30} width={30} height={30} alt="" />
         </span>
         <h2 className={styles.emptyTitle}>
-          {favoriteStore.name}은 이번 주 행사를
+          {favoriteStore.name}은 아직 이번 주 행사를
           <br />
-          준비하고 있어요
+          올리지 않았어요
         </h2>
-        <div className={styles.emptyText}>
-          <p className={styles.emptySub}>행사가 올라오면 바로 알려드릴게요</p>
-          {/* 마지막 갱신일 (매장 데이터 updatedAt). 한 줄에 들어가도록 문구를 줄였다 — COPY_TODO.md */}
-          <p className={styles.lastUpdated}>
-            아직 이번 주 전단이 없어요 · 마지막 갱신 {formatMonthDay(favoriteStore.updatedAt)}
-          </p>
-        </div>
+        <p className={styles.emptySub}>행사가 올라오면 바로 알려드릴게요</p>
         <Button
           variant="tint"
           block={false}

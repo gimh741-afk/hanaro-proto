@@ -74,7 +74,7 @@ export function LoginGateProvider({ children }: { children: ReactNode }) {
             <p className={styles.sub}>행사는 로그인 없이 둘러볼 수 있어요</p>
             <div className={styles.actions}>
               <Button ref={firstButton} onClick={handleLogin}>
-                간편 로그인
+                3초 만에 로그인
               </Button>
               <Button variant="secondary" onClick={close}>
                 계속 둘러볼게요

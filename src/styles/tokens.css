@@ -19,6 +19,9 @@
   --red-50: #fdeded; /* 상세 "6일 남음" 배경 */
   --red-500: #e5484d; /* 상세 "6일 남음" 글자 */
   --dim: rgba(25, 31, 28, 0.5); /* 바텀시트 뒤 배경 */
+  --orange-50: #fff2e5; /* 확인 필요 행 배경 (M-2, Figma) */
+  --orange-500: #e58026; /* 확인 필요 글자 (M-2, Figma) */
+  --surface-100: #f6f8f7; /* 담당자 화면 안내 칸 (M-1, Figma) */
   --shadow-fab: 0 4px 10px rgba(23, 163, 74, 0.3);
 
   /* Radius · spacing */

@@ -12,6 +12,8 @@ const MAZE_URLS = [
   { query: '?start=guest', hint: '비회원으로 시작' },
   { query: '?start=member', hint: '회원으로 시작' },
   { query: '?start=member&scenario=auth-fail', hint: '인증 실패 화면 보기' },
+  { query: '?start=manager', hint: '담당자 계정으로 시작' },
+  { query: '?start=manager&scenario=flyer-fail', hint: '전단 읽기 실패 보기' },
   { query: '?reset=1', hint: '저장 상태 지우기' },
 ];
 
@@ -73,7 +75,7 @@ export function DevMenu({ onClose }: { onClose: () => void }) {
             <h3 className={styles.groupTitle}>지금 상태</h3>
             <dl className={styles.state}>
               <dt>로그인</dt>
-              <dd>{app.isLoggedIn ? '회원' : '비회원'}</dd>
+              <dd>{app.isManager ? '담당자' : app.isLoggedIn ? '회원' : '비회원'}</dd>
               <dt>단골 매장</dt>
               <dd>{app.favoriteStore.name}</dd>
               <dt>받은 쿠폰</dt>
@@ -104,6 +106,15 @@ export function DevMenu({ onClose }: { onClose: () => void }) {
               >
                 회원으로 시작
               </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  app.startAs('manager');
+                  done('담당자 계정으로 시작해요');
+                }}
+              >
+                담당자 계정으로 시작
+              </Button>
             </div>
           </section>
 
@@ -133,6 +144,12 @@ export function DevMenu({ onClose }: { onClose: () => void }) {
                 onClick={() => app.patchState({ scenario: app.scenario === 'auth-fail' ? null : 'auth-fail' })}
               >
                 인증 실패 {app.scenario === 'auth-fail' ? '끄기' : '켜기'}
+              </Button>
+              <Button
+                variant="tint"
+                onClick={() => app.patchState({ scenario: app.scenario === 'flyer-fail' ? null : 'flyer-fail' })}
+              >
+                전단 읽기 실패 {app.scenario === 'flyer-fail' ? '끄기' : '켜기'}
               </Button>
               <Button variant="tint" onClick={() => app.patchState({ claimedCouponIds: COUPONS.map((c) => c.id) })}>
                 쿠폰 모두 받기

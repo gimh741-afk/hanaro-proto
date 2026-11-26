@@ -2,7 +2,11 @@ export type ProductId = 'jeju-tangerine' | 'hanwoo-sirloin' | 'kimjang-set' | 'h
 
 export type ProductBadge = '농할' | '회원가' | '기획전';
 
+/** 할인 종류 — 목록 카드에서 색이 아니라 글자로 구분한다 ("쿠폰", "카드") */
+export type DiscountKind = 'coupon' | 'card';
+
 export interface PriceDiscount {
+  kind: DiscountKind;
   label: string;
   amount: number;
   /** 이 할인이 상품 쿠폰이면 해당 쿠폰 id */
@@ -37,8 +41,8 @@ export const PRODUCTS: Product[] = [
     finalPrice: 7784,
     originalPrice: 10980,
     discounts: [
-      { label: 'NH카드', amount: 1000 },
-      { label: '상품 쿠폰', amount: 2196, couponId: 'tangerine-2196' },
+      { kind: 'card', label: 'NH카드', amount: 1000 },
+      { kind: 'coupon', label: '상품 쿠폰', amount: 2196, couponId: 'tangerine-2196' },
     ],
     endsLabel: '12.03(수)까지',
     endsAt: '2025-12-03',

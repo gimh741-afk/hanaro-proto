@@ -63,6 +63,22 @@
   color: var(--ink-900);
 }
 
+/* 할인 조건 (이번 주 행사 목록) — 색은 그린 한 가지, 종류는 글자로 구분 */
+.conditions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+  color: var(--green-700);
+}
+
+.conditions li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .caption {
   font-size: var(--fs-caption-2);
   color: var(--gray-700);

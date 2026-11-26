@@ -4,7 +4,6 @@ import checkIcon from '../assets/icons/check-16-green.svg';
 import chevDown from '../assets/icons/chev-down.svg';
 import chevRightGreen from '../assets/icons/chev-right-green.svg';
 import chevRight from '../assets/icons/chev-right.svg';
-import dotIcon from '../assets/icons/dot-green.svg';
 import pinIcon from '../assets/icons/pin-green.svg';
 import searchIcon from '../assets/icons/search.svg';
 import { ProductCard } from '../components/ProductCard';
@@ -46,10 +45,6 @@ export default function Home() {
           <img src={chevDown} width={18} height={18} alt="" />
           <span className="sr-only">바꾸기</span>
         </Link>
-        <p className={styles.updated}>
-          <img src={dotIcon} width={6} height={6} alt="" />
-          {EVENT_PERIOD.startShort} 새 행사가 올라왔어요
-        </p>
       </div>
 
       <div className={styles.searchWrap}>
@@ -111,7 +106,7 @@ function GuestBenefitCard() {
         이번 주 12,480명이 받아 갔어요
       </p>
       <button type="button" className={styles.loginButton} onClick={handleLogin}>
-        간편 로그인
+        3초 만에 로그인
       </button>
       <p className={styles.benefitNote}>행사는 로그인 없이 둘러볼 수 있어요</p>
     </div>

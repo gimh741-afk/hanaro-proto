@@ -1,0 +1,48 @@
+/* LoginSheet와 같은 모양의 범용 바텀시트 */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  background: var(--dim);
+  animation: fade-in 160ms ease-out;
+}
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 28px var(--side) calc(24px + env(safe-area-inset-bottom, 0px));
+  border-radius: 20px 20px 0 0;
+  background: var(--white);
+  animation: slide-up 200ms ease-out;
+}
+
+.title {
+  font-size: var(--fs-title-2);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+  line-height: 1.4;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .sheet {
+    animation: none;
+  }
+}

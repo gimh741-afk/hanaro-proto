@@ -35,7 +35,7 @@ function tabFromPath(pathname: string): TabKey | null {
   if (pathname === '/events' || pathname.startsWith('/events/')) return 'events';
   if (pathname === '/barcode') return 'barcode';
   if (pathname === '/coupons') return 'coupons';
-  if (pathname === '/my') return 'my';
+  if (pathname === '/my' || pathname === '/manage' || pathname.startsWith('/manage/')) return 'my';
   return null;
 }
 
