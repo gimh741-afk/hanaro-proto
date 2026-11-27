@@ -9,6 +9,8 @@ export interface Coupon {
   id: CouponId;
   amount: number;
   title: string;
+  /** 짧은 이름 — 바코드 '지금 받으면 함께 할인돼요' 줄 (없으면 title) */
+  shortTitle?: string;
   /** 최소 구매 금액 (없으면 조건 없음) */
   minSpend?: number;
   scope: CouponScope;
@@ -32,6 +34,7 @@ export const COUPONS: Coupon[] = [
     id: 'tangerine-2196',
     amount: 2196,
     title: '제주 감귤 3kg 상품쿠폰',
+    shortTitle: '감귤 상품쿠폰',
     scope: { type: 'store', storeId: 'sinchon' },
     productId: 'jeju-tangerine',
     expiresLabel: '12.03까지',

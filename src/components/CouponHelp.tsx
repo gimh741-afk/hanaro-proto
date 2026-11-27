@@ -33,7 +33,7 @@ export function CouponHelp({ className }: { className?: string }) {
             ))}
           </ol>
           <Button variant="secondary" onClick={() => setOpen(false)}>
-            계속 둘러볼게요
+            확인
           </Button>
         </BottomSheet>
       )}

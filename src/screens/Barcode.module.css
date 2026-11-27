@@ -168,3 +168,25 @@
   gap: 22px;
   padding: 18px var(--side) 0;
 }
+
+/* 지금 받으면 함께 할인돼요 — 민트 배경 카드 + 오른쪽 [받기] */
+.claimRow {
+  padding-right: 10px;
+  background: var(--green-50);
+}
+
+.claimButton {
+  flex-shrink: 0;
+  min-width: 56px;
+  height: var(--touch-min);
+  padding: 0 14px;
+  border-radius: var(--radius-12);
+  background: var(--green-600);
+  color: var(--white);
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+}
+
+.help {
+  padding: 18px var(--side) 0;
+}

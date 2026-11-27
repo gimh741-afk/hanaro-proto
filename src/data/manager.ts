@@ -45,7 +45,8 @@ export const REVIEW_ROWS: ReviewRow[] = [
   fromProduct('kimjang-set', 'price'),
   fromProduct('haenam-cabbage'),
   // 아래 두 상품은 고객 앱 상품 목록에는 없고, Figma M-2 초안에만 있다
-  { id: 'garlic', name: '깐마늘 1kg', issue: 'period' },
+  // 깐마늘 가격·할인율은 2026-11-27 확정값 (5,000원 · 15%). 행사기간은 담당자가 고친다.
+  { id: 'garlic', name: '깐마늘 1kg', price: 5000, rate: 15, issue: 'period' },
   { id: 'pork-belly', name: '프로포크 돈육 삼겹살 100g', price: 1990, rate: 23 },
 ];
 
@@ -64,7 +65,7 @@ export const FLYER_ROW_FOR_WISH: Record<string, string> = { 'peeled-garlic': 'ga
 
 export interface FlyerItemInfo {
   name: string;
-  /** 전단 정리 데이터에 있는 값만. 깐마늘은 M-2 초안에 가격·할인율이 없어 비어 있다. */
+  /** 전단 정리 데이터에 있는 값 (깐마늘 5,000원 · 15%) */
   price?: number;
   rate?: number;
   period: string;

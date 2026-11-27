@@ -1,13 +1,14 @@
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import checkIcon from '../assets/icons/check-14-green.svg';
 import chevLeft from '../assets/icons/chev-left.svg';
+import chevRight from '../assets/icons/chev-right.svg';
 import coinIcon from '../assets/icons/coin-18-green.svg';
 import ticketIcon from '../assets/icons/ticket-18-green.svg';
 import { Button } from '../components/Button';
 import { StatusBar } from '../components/StatusBar';
 import { TabBar } from '../components/TabBar';
 import { useToast } from '../components/Toast';
-import { buildLatestReceipt, sumApplied, type AppliedDiscount } from '../data/receipt';
+import { buildLatestReceipt, PAST_PAYMENTS, sumApplied, type AppliedDiscount } from '../data/receipt';
 import { getStore } from '../data/stores';
 import { useAppState } from '../state/AppStateContext';
 import { formatWon } from '../utils/format';
@@ -41,8 +42,9 @@ export default function Receipt() {
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 
-  // 실제로 받은 쿠폰 기준 (감귤 쿠폰을 안 받았으면 미적용으로, 김장맞이는 받았을 때만)
+  // 실제로 적용된 할인만 (받은 감귤 쿠폰 · NH카드 · NH포인트). 받지 않았거나 조건이 안 맞은 쿠폰은 보여 주지 않는다.
   const receipt = buildLatestReceipt(claimedCouponIds);
+  const soon = () => showToast('준비 중이에요');
   const store = getStore(receipt.storeId);
   const total = sumApplied(receipt);
   const goBack = () => (location.key === 'default' ? navigate('/my') : navigate(-1));
@@ -56,7 +58,7 @@ export default function Receipt() {
           <img src={chevLeft} width={26} height={26} alt="" />
         </button>
         <div>
-          <h1 className={styles.title}>영수증 · 할인 확인</h1>
+          <h1 className={styles.title}>영수증</h1>
           <p className={styles.sub}>
             {receipt.dateLabel} {store.name} · 방금 계산
           </p>
@@ -67,7 +69,6 @@ export default function Receipt() {
         <h2 id="receipt-total" className={styles.summaryTitle}>
           {formatWon(total)} 할인받았어요
         </h2>
-        <p className={styles.summarySub}>앱에서 받은 쿠폰과 할인이 영수증에 모두 반영됐어요</p>
         <p className={styles.match}>
           영수증과 일치
           <img src={checkIcon} width={14} height={14} alt="" />
@@ -76,7 +77,7 @@ export default function Receipt() {
 
       <section className={styles.group} aria-labelledby="receipt-applied">
         <h2 id="receipt-applied" className={styles.groupTitle}>
-          적용된 할인
+          받은 할인
         </h2>
         <ul className={styles.list}>
           {receipt.applied.map((d) => (
@@ -91,30 +92,37 @@ export default function Receipt() {
         </ul>
       </section>
 
-      {receipt.missed.length > 0 && (
-      <section className={styles.group} aria-labelledby="receipt-missed">
-        <h2 id="receipt-missed" className={`${styles.groupTitle} ${styles.missedTitle}`}>
-          적용되지 않은 할인
-        </h2>
-        <ul className={styles.list}>
-          {receipt.missed.map((m) => (
-            <li key={m.id} className={`${styles.row} ${styles.missed}`}>
-              <span className={styles.rowText}>
-                <span className={styles.rowName}>{m.title}</span>
-                <span className={styles.rowSub}>{m.reason}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-      )}
-
       <div className={styles.actions}>
         {/* 영수증 원본 화면은 없어서 "준비 중이에요" (CLAUDE.md 작업 원칙) */}
-        <Button variant="secondary" onClick={() => showToast('준비 중이에요')}>
+        <Button variant="secondary" onClick={soon}>
           영수증 자세히 보기
         </Button>
       </div>
+
+      <section className={styles.group} aria-labelledby="receipt-past">
+        <h2 id="receipt-past" className={styles.groupTitle}>
+          지난 결제
+        </h2>
+        <ul className={styles.pastList}>
+          {PAST_PAYMENTS.map((p) => (
+            <li key={p.dateLabel}>
+              {/* 지난 영수증 화면은 없어서 "준비 중이에요" */}
+              <button type="button" className={styles.pastRow} onClick={soon}>
+                <span className={styles.pastText}>
+                  <span className={styles.pastDate}>
+                    {p.dateLabel} {getStore(p.storeId).name}
+                  </span>
+                  <span className={styles.pastAmount}>
+                    {formatWon(p.paidAmount)} · {p.discountAmount > 0 ? `${formatWon(p.discountAmount)} 할인` : '할인 없음'}
+                  </span>
+                </span>
+                <img src={chevRight} width={16} height={16} alt="" />
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p className={styles.pastNote}>최근 3개월 결제만 보여드려요</p>
+      </section>
 
       <TabBar />
     </div>
