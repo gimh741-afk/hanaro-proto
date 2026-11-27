@@ -22,7 +22,7 @@ const HOME_PRODUCTS = PRODUCTS.filter((p) => p.id !== 'haenam-cabbage');
 
 /** B0-1 홈(비회원) · B1-1 홈(회원) — 혜택 카드만 로그인 상태에 따라 다르다 */
 export default function Home() {
-  const { isLoggedIn, favoriteStore } = useAppState();
+  const { isLoggedIn, favoriteStore, locationAllowed } = useAppState();
   const showToast = useToast();
   // 전단 미등록 매장(우면점·내곡점): 상품·기간·전체 보기 대신 행사 탭 빈 상태(S-2)를 짧게
   const isPreparing = favoriteStore.eventStatus === 'preparing';
@@ -89,7 +89,8 @@ export default function Home() {
                 행사 알림 받기
               </button>
               <Link to="/events" className={styles.nearbyLink}>
-                근처 매장 행사 보기
+                {/* 위치를 허용하지 않았으면 '근처'를 알 수 없어서 '다른 매장' */}
+                {locationAllowed ? '근처 매장 행사 보기' : '다른 매장 행사 보기'}
                 <img src={chevRightGreen} width={16} height={16} alt="" />
               </Link>
             </div>
