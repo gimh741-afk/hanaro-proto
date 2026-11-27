@@ -101,3 +101,33 @@
   font-size: var(--fs-caption-2);
   color: var(--gray-700);
 }
+
+/* 검색칸 — 기존 회색 칸 모양 그대로, 실제 입력 */
+.searchInput {
+  flex: 1 0 0;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--ink-900);
+}
+
+.searchInput::placeholder {
+  color: var(--gray-500);
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.search:focus-within {
+  outline: 2px solid var(--green-700);
+  outline-offset: 0;
+}
+
+.empty {
+  padding: 16px 0 4px;
+  font-size: var(--fs-body-2);
+  line-height: 1.5;
+  color: var(--gray-700);
+}

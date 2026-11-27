@@ -42,6 +42,22 @@ export function getStore(id: StoreId): Store {
   return store;
 }
 
+/**
+ * 매장 검색 — 매장 이름·구 이름으로 거른다 ('양재' → 양재점, '서초' → 서초구 매장들).
+ * 안내 예시 '양재동', '서초농협'처럼 붙여 쓰는 말(하나로마트·농협·점·동)과 띄어쓰기는 떼고 찾는다.
+ */
+export function searchStores(query: string): Store[] {
+  const raw = query.replace(/\s+/g, '');
+  if (!raw) return [];
+  // '서초점'처럼 매장 이름을 그대로 쓰면 그 매장만
+  if (raw.endsWith('점')) {
+    const exact = STORES.filter((s) => `하나로마트${s.name}`.endsWith(raw));
+    if (exact.length > 0) return exact;
+  }
+  const core = raw.replace(/^하나로마트/, '').replace(/(농협|점|동)$/, '') || raw;
+  return STORES.filter((s) => s.name.includes(core) || s.district.includes(core));
+}
+
 /** 가까운 순 (현재 위치 기준 distanceKm) — 단골 매장 고르기·첫 실행 매장 선택 */
 export function sortByDistance(stores: readonly Store[]): Store[] {
   return [...stores].sort((a, b) => a.distanceKm - b.distanceKm);

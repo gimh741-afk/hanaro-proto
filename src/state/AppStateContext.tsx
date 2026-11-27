@@ -39,6 +39,8 @@ export interface AppState {
   flyerEdits: FlyerEdits;
   /** 첫 실행(권한 안내 → 단골 매장 선택)을 마쳤는지. `?start=`로 들어오면 건너뛴다. */
   onboarded: boolean;
+  /** 권한 안내에서 위치를 허용했는지. false면 매장 화면에서 '내 주변 매장'·거리를 숨기고 검색부터 (실제 위치는 쓰지 않는다) */
+  locationAllowed: boolean;
   /** `?scenario=auth-fail` 처럼 URL로 들어온 테스트 시나리오. 라우트 이동 뒤에도 기억한다. */
   scenario: Scenario | null;
 }
@@ -58,6 +60,7 @@ function createDefaultState(overrides: Partial<AppState> = {}): AppState {
     publishedFlyer: null,
     flyerEdits: {},
     onboarded: true,
+    locationAllowed: true,
     scenario: null,
     ...overrides,
   };
@@ -84,6 +87,7 @@ function loadStoredState(): AppState | null {
       flyerEdits: toFlyerEdits(p.flyerEdits),
       // 이 필드가 생기기 전에 저장된 상태(이미 써 본 사람)는 첫 실행을 건너뛴다
       onboarded: p.onboarded !== false,
+      locationAllowed: p.locationAllowed !== false,
       scenario: toScenario(p.scenario),
     });
   } catch {
@@ -236,6 +240,8 @@ export interface AppStateValue extends AppState {
   publishFlyer: (how: PublishedFlyer, edits?: FlyerEdits) => void;
   /** 첫 실행에서 고른 매장을 단골로 정하고 첫 실행을 끝낸다 */
   finishOnboarding: (storeId: StoreId) => void;
+  /** 권한 안내에서 고른 위치 허용 여부 */
+  setLocationAllowed: (allowed: boolean) => void;
   /** 개발용 메뉴: 상태 일부를 바로 바꾼다 */
   patchState: (patch: Partial<AppState>) => void;
 }
@@ -286,6 +292,10 @@ export function AppStateProvider({ initialState, children }: { initialState: App
       setState((s) => ({ ...s, publishedFlyer: how, flyerEdits: how === 'items' ? edits : {} })),
     [],
   );
+  const setLocationAllowed = useCallback(
+    (allowed: boolean) => setState((s) => ({ ...s, locationAllowed: allowed })),
+    [],
+  );
   const finishOnboarding = useCallback(
     (storeId: StoreId) => setState((s) => ({ ...s, favoriteStoreId: storeId, onboarded: true })),
     [],
@@ -328,9 +338,10 @@ export function AppStateProvider({ initialState, children }: { initialState: App
       startAs,
       publishFlyer,
       finishOnboarding,
+      setLocationAllowed,
       patchState,
     };
-  }, [state, login, logout, setFavoriteStore, claimCoupon, setWished, clearScenario, resetAll, startAs, publishFlyer, finishOnboarding, patchState]);
+  }, [state, login, logout, setFavoriteStore, claimCoupon, setWished, clearScenario, resetAll, startAs, publishFlyer, finishOnboarding, setLocationAllowed, patchState]);
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

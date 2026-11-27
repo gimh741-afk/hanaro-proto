@@ -3,6 +3,7 @@ import bellIcon from '../assets/icons/bell.svg';
 import locationIcon from '../assets/icons/location.svg';
 import { Button } from '../components/Button';
 import { StatusBar } from '../components/StatusBar';
+import { useAppState } from '../state/AppStateContext';
 import styles from './Welcome.module.css';
 
 /**
@@ -17,6 +18,13 @@ const PERMISSIONS = [
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const { setLocationAllowed } = useAppState();
+
+  // 위치를 고르면 단골 매장 선택으로. 허용 → 가까운 순 목록, 허용 안 함 → 검색부터
+  const next = (allowed: boolean) => {
+    setLocationAllowed(allowed);
+    navigate('/welcome/store');
+  };
 
   return (
     <div className={styles.screen}>
@@ -50,7 +58,10 @@ export default function Welcome() {
       </div>
 
       <div className={styles.cta}>
-        <Button onClick={() => navigate('/welcome/store')}>단골 매장 고르기</Button>
+        <Button onClick={() => next(true)}>위치 허용하고 매장 찾기</Button>
+        <button type="button" className={styles.textButton} onClick={() => next(false)}>
+          위치 없이 직접 찾을게요
+        </button>
       </div>
     </div>
   );
