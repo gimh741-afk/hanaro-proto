@@ -15,7 +15,7 @@ const MAZE_URLS = [
   { query: '?start=manager', hint: '담당자 계정으로 시작' },
   { query: '?start=manager&scenario=flyer-fail', hint: '전단 읽기 실패 보기' },
   { query: '?start=member&scenario=after-checkout', hint: '계산 직후 영수증 · 할인 확인' },
-  { query: '?reset=1', hint: '저장 상태 지우기' },
+  { query: '?reset=1', hint: '저장 상태 지우기 · 첫 실행부터' },
 ];
 
 /**

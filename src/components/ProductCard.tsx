@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { PRODUCT_IMAGES, type ProductImage } from '../assets/products';
 import imageIcon from '../assets/icons/image-30.svg';
 import type { Product } from '../data/products';
-import type { WatchItem } from '../data/wishlist';
+import { periodCaption, type FlyerItemInfo } from '../data/manager';
+import type { WatchItem, WishId } from '../data/wishlist';
 import { useAppState } from '../state/AppStateContext';
 import { formatWon } from '../utils/format';
 import { HeartIcon, useWishToggle } from './Heart';
@@ -12,7 +13,7 @@ type ProductCardProps = {
   product: Product;
   /** 기본값: src/assets/products의 PRODUCT_IMAGES. 둘 다 없으면 회색 자리만 보인다. */
   image?: ProductImage;
-  /** 기본값: '~12.03(수)까지'. 컴포넌트 보드처럼 ' · 쿠폰 적용가'를 붙이려면 직접 넘긴다. */
+  /** 기본값: '~12.03까지'. 컴포넌트 보드처럼 ' · 쿠폰 적용가'를 붙이려면 직접 넘긴다. */
   caption?: string;
   /**
    * 가격 아래 할인 조건 (이번 주 행사 목록에서만 넘긴다, utils/discounts.ts).
@@ -86,6 +87,34 @@ export function WatchCard({ item, storeName }: { item: WatchItem; storeName: str
         <p className={styles.watchNote}>아직 {storeName} 행사 정보가 없어요</p>
       </div>
       <LikeButton label={item.name} wished={isWished(item.id)} onClick={() => toggleWish(item.id)} />
+    </article>
+  );
+}
+
+/**
+ * 담당자 전단에서 게시된 상품 카드 (깐마늘 1kg) — 고객 앱 상품 데이터에는 없고 전단 정리 데이터로만 그린다.
+ * 사진·상세 화면이 없어서 이미지 자리는 비워 두고 카드 자체는 누를 수 없다. 가격·할인율은 정리 데이터에 있을 때만.
+ */
+export function FlyerItemCard({ id, info, tag }: { id: WishId; info: FlyerItemInfo; tag?: string }) {
+  const { isWished } = useAppState();
+  const toggleWish = useWishToggle();
+  return (
+    <article className={styles.card}>
+      <div className={styles.link}>
+        <div className={`${styles.image} ${styles.flyerImage}`}>
+          <img className={styles.watchIcon} src={imageIcon} width={30} height={30} alt="" />
+        </div>
+        <p className={styles.name}>{info.name}</p>
+        {info.price !== undefined && (
+          <p className={styles.price}>
+            {info.rate !== undefined && <span className={styles.rate}>{info.rate}%</span>}
+            <span className={styles.amount}>{formatWon(info.price)}</span>
+          </p>
+        )}
+        <p className={styles.caption}>{periodCaption(info.period)}</p>
+        {tag && <span className={styles.tag}>{tag}</span>}
+      </div>
+      <LikeButton label={info.name} wished={isWished(id)} onClick={() => toggleWish(id)} />
     </article>
   );
 }

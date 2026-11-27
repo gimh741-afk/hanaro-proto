@@ -42,7 +42,7 @@ export default function My() {
     }
   };
 
-  // 포인트는 다음 화면이 없어 "준비 중이에요" (CLAUDE.md 작업 원칙)
+  // 포인트·이벤트·공지사항·계정 관리는 다음 화면이 없어 "준비 중이에요" (CLAUDE.md 작업 원칙)
   const soon = () => showToast('준비 중이에요');
 
   const items: MenuItem[] = [
@@ -50,6 +50,9 @@ export default function My() {
     { label: '포인트', value: `${MEMBER.nhPoint}P`, onClick: soon },
     { label: '영수증', onClick: () => navigate('/my/receipt') },
     { label: '관심상품', value: `${wishlistIds.length}개`, onClick: () => navigate('/events?filter=wish') },
+    { label: '이벤트', onClick: soon },
+    { label: '공지사항', onClick: soon },
+    { label: '계정 관리', onClick: soon },
   ];
   if (isManager) items.push({ label: '매장 관리', onClick: () => navigate('/manage') });
 

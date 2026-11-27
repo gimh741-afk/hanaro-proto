@@ -23,7 +23,7 @@ export interface Product {
   originalPrice?: number;
   /** 가격 계산표(정가 → 할인 → 내가 내는 가격)에 쓰는 할인 내역 */
   discounts?: PriceDiscount[];
-  /** 행사 마감 표기, 예: '12.03(수)까지' */
+  /** 행사 마감 표기, 예: '12.03까지' */
   endsLabel?: string;
   /** 행사 마감일(ISO). 남은 일수 계산용 */
   endsAt?: string;
@@ -44,7 +44,7 @@ export const PRODUCTS: Product[] = [
       { kind: 'card', label: 'NH카드', amount: 1000 },
       { kind: 'coupon', label: '상품 쿠폰', amount: 2196, couponId: 'tangerine-2196' },
     ],
-    endsLabel: '12.03(수)까지',
+    endsLabel: '12.03까지',
     endsAt: '2025-12-03',
   },
   {
@@ -53,7 +53,7 @@ export const PRODUCTS: Product[] = [
     badge: '회원가',
     discountRate: 10,
     finalPrice: 8980,
-    endsLabel: '11.30(일)까지',
+    endsLabel: '11.30까지',
     endsAt: '2025-11-30',
   },
   {
@@ -63,7 +63,7 @@ export const PRODUCTS: Product[] = [
     discountRate: 15,
     finalPrice: 33915,
     // B0-1 홈 상품 카드 기준
-    endsLabel: '12.03(수)까지',
+    endsLabel: '12.03까지',
     endsAt: '2025-12-03',
   },
   {
@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
     discountRate: 12,
     finalPrice: 35100,
     // B0-2 행사 목록 상품 카드 기준
-    endsLabel: '12.03(수)까지',
+    endsLabel: '12.03까지',
     endsAt: '2025-12-03',
   },
 ];

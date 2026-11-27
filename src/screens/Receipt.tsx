@@ -7,11 +7,10 @@ import { Button } from '../components/Button';
 import { StatusBar } from '../components/StatusBar';
 import { TabBar } from '../components/TabBar';
 import { useToast } from '../components/Toast';
-import { getCoupon } from '../data/coupons';
-import { LATEST_RECEIPT, sumApplied, type AppliedDiscount } from '../data/receipt';
+import { buildLatestReceipt, sumApplied, type AppliedDiscount } from '../data/receipt';
 import { getStore } from '../data/stores';
 import { useAppState } from '../state/AppStateContext';
-import { formatManWon, formatWon } from '../utils/format';
+import { formatWon } from '../utils/format';
 import styles from './Receipt.module.css';
 
 /** 카드 할인 아이콘 — 아이콘 세트에 카드가 없어 같은 선 굵기·그린으로 그린다 (18px) */
@@ -35,14 +34,15 @@ function DiscountIcon({ kind }: { kind: AppliedDiscount['kind'] }) {
  * 적용되지 않은 할인은 주황으로, 이유(최소 금액)와 함께 보여 준다.
  */
 export default function Receipt() {
-  const { isLoggedIn } = useAppState();
+  const { isLoggedIn, claimedCouponIds } = useAppState();
   const navigate = useNavigate();
   const location = useLocation();
   const showToast = useToast();
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 
-  const receipt = LATEST_RECEIPT;
+  // 실제로 받은 쿠폰 기준 (감귤 쿠폰을 안 받았으면 미적용으로, 김장맞이는 받았을 때만)
+  const receipt = buildLatestReceipt(claimedCouponIds);
   const store = getStore(receipt.storeId);
   const total = sumApplied(receipt);
   const goBack = () => (location.key === 'default' ? navigate('/my') : navigate(-1));
@@ -91,32 +91,23 @@ export default function Receipt() {
         </ul>
       </section>
 
+      {receipt.missed.length > 0 && (
       <section className={styles.group} aria-labelledby="receipt-missed">
         <h2 id="receipt-missed" className={`${styles.groupTitle} ${styles.missedTitle}`}>
           적용되지 않은 할인
         </h2>
         <ul className={styles.list}>
-          {receipt.missed.map((m) => {
-            const coupon = getCoupon(m.couponId);
-            if (!coupon) return null;
-            return (
-              <li key={m.couponId} className={`${styles.row} ${styles.missed}`}>
-                <span className={styles.rowText}>
-                  <span className={styles.rowName}>
-                    {coupon.title} {formatWon(coupon.amount)}
-                  </span>
-                  {coupon.minSpend !== undefined && (
-                    <span className={styles.rowSub}>
-                      {formatManWon(coupon.minSpend)} 이상 사면 쓸 수 있어요. 이번 결제는 {formatWon(m.paidAmount)}이라
-                      적용되지 않았어요.
-                    </span>
-                  )}
-                </span>
-              </li>
-            );
-          })}
+          {receipt.missed.map((m) => (
+            <li key={m.id} className={`${styles.row} ${styles.missed}`}>
+              <span className={styles.rowText}>
+                <span className={styles.rowName}>{m.title}</span>
+                <span className={styles.rowSub}>{m.reason}</span>
+              </span>
+            </li>
+          ))}
         </ul>
       </section>
+      )}
 
       <div className={styles.actions}>
         {/* 영수증 원본 화면은 없어서 "준비 중이에요" (CLAUDE.md 작업 원칙) */}

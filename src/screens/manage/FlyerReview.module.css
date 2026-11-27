@@ -185,3 +185,9 @@
   font-size: var(--fs-body-2);
   color: var(--gray-700);
 }
+
+/* 확인 필요가 남았을 때 — 주황 배경이 아닌 흰 바탕 위라 orange-700 (AA) */
+.ctaWarn {
+  color: var(--orange-700);
+  font-weight: var(--fw-medium);
+}

@@ -25,7 +25,7 @@ export const COUPONS: Coupon[] = [
     title: '김장맞이 할인쿠폰',
     minSpend: 60000,
     scope: { type: 'nationwide' },
-    expiresLabel: '12.03(수)까지',
+    expiresLabel: '12.03까지',
     expiresAt: '2025-12-03',
   },
   {
@@ -34,7 +34,7 @@ export const COUPONS: Coupon[] = [
     title: '제주 감귤 3kg 상품쿠폰',
     scope: { type: 'store', storeId: 'sinchon' },
     productId: 'jeju-tangerine',
-    expiresLabel: '12.03(수)까지',
+    expiresLabel: '12.03까지',
     expiresAt: '2025-12-03',
   },
   {
@@ -43,7 +43,7 @@ export const COUPONS: Coupon[] = [
     title: '양재점 오픈 기념 쿠폰',
     minSpend: 10000,
     scope: { type: 'store', storeId: 'yangjae' },
-    expiresLabel: '11.30(일)까지',
+    expiresLabel: '11.30까지',
     expiresAt: '2025-11-30',
   },
 ];

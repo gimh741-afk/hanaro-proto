@@ -9,6 +9,7 @@ import My from '../screens/My';
 import ProductDetail from '../screens/ProductDetail';
 import Receipt from '../screens/Receipt';
 import Stores from '../screens/Stores';
+import Welcome from '../screens/Welcome';
 import FlyerReview from '../screens/manage/FlyerReview';
 import FlyerUpload from '../screens/manage/FlyerUpload';
 import { useAppState } from '../state/AppStateContext';
@@ -26,6 +27,15 @@ function ScrollReset() {
   return null;
 }
 
+/** 첫 실행을 마치지 않았으면 어느 주소로 들어와도 권한 안내부터 (?reset=1 후 파라미터 없이 열었을 때) */
+function OnboardingGate({ children }: { children: ReactNode }) {
+  const { onboarded } = useAppState();
+  const { pathname } = useLocation();
+  if (!onboarded && !pathname.startsWith('/welcome')) return <Navigate to="/welcome" replace />;
+  if (onboarded && pathname.startsWith('/welcome')) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
+
 /** 매장 담당자 계정만 들어갈 수 있는 화면 (MY > 매장 관리). 일반 고객은 MY로 */
 function ManagerOnly({ children }: { children: ReactNode }) {
   const { isManager } = useAppState();
@@ -36,7 +46,10 @@ export function AppRoutes() {
   return (
     <>
       <ScrollReset />
+      <OnboardingGate>
       <Routes>
+      <Route path="/welcome" element={<Welcome />} />
+      <Route path="/welcome/store" element={<Stores onboarding />} />
       <Route path="/" element={<Home />} />
       <Route path="/events" element={<Events />} />
       <Route path="/events/:productId" element={<ProductDetail />} />
@@ -74,6 +87,7 @@ export function AppRoutes() {
       )}
       <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </OnboardingGate>
     </>
   );
 }

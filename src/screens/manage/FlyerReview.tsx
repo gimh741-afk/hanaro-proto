@@ -7,7 +7,14 @@ import { Button } from '../../components/Button';
 import { Chip } from '../../components/Chip';
 import { StatusBar } from '../../components/StatusBar';
 import { useToast } from '../../components/Toast';
-import { ISSUE_MESSAGE, MANAGER_STORE_ID, REVIEW_ROWS, THIS_WEEK_FLYER, type ReviewRow } from '../../data/manager';
+import {
+  ISSUE_MESSAGE,
+  MANAGER_STORE_ID,
+  REVIEW_ROWS,
+  THIS_WEEK_FLYER,
+  type FlyerEdits,
+  type ReviewRow,
+} from '../../data/manager';
 import { getStore } from '../../data/stores';
 import { useAppState } from '../../state/AppStateContext';
 import { formatWon } from '../../utils/format';
@@ -18,13 +25,14 @@ type Filter = 'all' | 'issue';
 function rowSub(row: ReviewRow): string {
   if (row.issue) return ISSUE_MESSAGE[row.issue];
   if (row.price !== undefined) return `${formatWon(row.price)} · ${row.rate}%`;
-  return `행사기간 ${THIS_WEEK_FLYER.period}`;
+  return `행사기간 ${row.period ?? THIS_WEEK_FLYER.period}`;
 }
 
 /**
  * M-2 정리된 상품 확인 (담당자 계정 전용)
  * - 자동 정리가 안 된 항목은 주황 행 + [수정] → 시트에서 고치면 확인 완료로 바뀐다
- * - [신촌점 고객에게 게시하기] → 고객 화면 '이번 주 행사'(B0-2)로 이어진다
+ * - '확인 필요'가 남아 있으면 게시 버튼을 막고 "확인 필요 N개를 고치면 게시할 수 있어요"
+ * - [신촌점 고객에게 게시하기] → 고친 값과 함께 저장 → 고객 화면 '이번 주 행사'(B0-2)로 이어진다
  */
 export default function FlyerReview() {
   const { publishFlyer } = useAppState();
@@ -37,6 +45,8 @@ export default function FlyerReview() {
   const [filter, setFilter] = useState<Filter>('all');
   const [editing, setEditing] = useState<ReviewRow | null>(null);
   const [draft, setDraft] = useState('');
+  // 고친 값 — 게시할 때 함께 저장해서 고객 화면(깐마늘 행사기간 등)에 쓴다
+  const [edits, setEdits] = useState<FlyerEdits>({});
 
   const issueCount = rows.filter((r) => r.issue).length;
   const visible = filter === 'issue' ? rows.filter((r) => r.issue) : rows;
@@ -45,25 +55,24 @@ export default function FlyerReview() {
 
   const openEdit = (row: ReviewRow) => {
     setEditing(row);
-    setDraft(row.issue === 'price' ? (row.price ?? '').toLocaleString('ko-KR') : THIS_WEEK_FLYER.period);
+    setDraft(row.issue === 'price' ? (row.price ?? '').toLocaleString('ko-KR') : (row.period ?? THIS_WEEK_FLYER.period));
   };
 
   const saveEdit = () => {
     if (!editing) return;
     const price = Number(draft.replace(/[^0-9]/g, ''));
-    setRows((rs) =>
-      rs.map((r) =>
-        r.id === editing.id
-          ? { ...r, issue: undefined, price: editing.issue === 'price' && price > 0 ? price : r.price }
-          : r,
-      ),
-    );
+    const period = draft.trim() || THIS_WEEK_FLYER.period;
+    const fix =
+      editing.issue === 'price' ? { price: price > 0 ? price : editing.price } : { period };
+    setRows((rs) => rs.map((r) => (r.id === editing.id ? { ...r, ...fix, issue: undefined } : r)));
+    setEdits((es) => ({ ...es, [editing.id]: { ...es[editing.id], ...fix } }));
     showToast(`${editing.name} ${editing.issue === 'price' ? '가격' : '행사기간'}을 고쳤어요` /* COPY_TODO.md */);
     setEditing(null);
   };
 
   const publish = () => {
-    publishFlyer('items');
+    if (issueCount > 0) return;
+    publishFlyer('items', edits);
     showToast(`${store.name} 고객에게 게시했어요` /* COPY_TODO.md */);
     // 고객 화면 '이번 주 행사'로 이어서 보여 준다. 뒤로 가면 M-1(최근 올린 전단에 '게시됨')
     navigate('/events', { replace: true });
@@ -127,8 +136,16 @@ export default function FlyerReview() {
       )}
 
       <div className={styles.cta}>
-        <p className={styles.ctaNote}>게시하면 고객 앱 '이번 주 행사'에 바로 보여요</p>
-        <Button onClick={publish}>{store.name} 고객에게 게시하기</Button>
+        {issueCount > 0 ? (
+          <p className={`${styles.ctaNote} ${styles.ctaWarn}`} role="status">
+            확인 필요 {issueCount}개를 고치면 게시할 수 있어요
+          </p>
+        ) : (
+          <p className={styles.ctaNote}>게시하면 고객 앱 '이번 주 행사'에 바로 보여요</p>
+        )}
+        <Button onClick={publish} disabled={issueCount > 0}>
+          {store.name} 고객에게 게시하기
+        </Button>
       </div>
 
       {editing && (

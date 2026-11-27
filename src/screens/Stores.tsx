@@ -5,7 +5,7 @@ import searchIcon from '../assets/icons/search.svg';
 import { StatusBar } from '../components/StatusBar';
 import { StoreRow } from '../components/StoreRow';
 import { useToast } from '../components/Toast';
-import { STORES, type Store } from '../data/stores';
+import { sortByDistance, STORES, type Store } from '../data/stores';
 import { useAppState } from '../state/AppStateContext';
 import styles from './Stores.module.css';
 
@@ -13,24 +13,36 @@ import styles from './Stores.module.css';
  * B1-2 단골 매장 고르기 (동작 규칙 1)
  * - 행사 있음 매장 → 단골 변경 후 홈으로 + 토스트 (B1-3, Maze 성공 경로 그대로)
  * - 전단 미등록 매장 → 단골 설정은 막지 않고, 바로 이번 주 행사 탭의 빈 상태(S-2)로 이어 준다
+ *
+ * onboarding: 첫 실행 ② 단골 매장 선택 (/welcome/store) — 같은 목록을 가까운 순으로 모두 보여 주고,
+ * 고르면 그 매장으로 홈에 들어간다. 아직 단골이 없어서 '현재 단골 매장' 칸은 없다.
  */
-export default function Stores() {
-  const { favoriteStore, setFavoriteStore } = useAppState();
+export default function Stores({ onboarding = false }: { onboarding?: boolean }) {
+  const { favoriteStore, setFavoriteStore, finishOnboarding } = useAppState();
   const navigate = useNavigate();
   const location = useLocation();
   const showToast = useToast();
 
-  // 현재 단골을 뺀 나머지를 가까운 순으로
-  const nearby = STORES.filter((s) => s.id !== favoriteStore.id).sort((a, b) => a.distanceKm - b.distanceKm);
+  // 현재 단골을 뺀 나머지를 가까운 순으로 (첫 실행에서는 전부)
+  const nearby = sortByDistance(onboarding ? STORES : STORES.filter((s) => s.id !== favoriteStore.id));
 
   const goBack = () => {
+    if (onboarding) navigate('/welcome', { replace: true });
     // 주소로 바로 들어온 경우(이전 기록 없음)에는 홈으로
-    if (location.key === 'default') navigate('/');
+    else if (location.key === 'default') navigate('/');
     else navigate(-1);
   };
 
   const handleSelect = (store: Store) => {
     const hasFlyer = store.eventStatus === 'active';
+    if (onboarding) {
+      finishOnboarding(store.id);
+      showToast(
+        hasFlyer ? `${store.name} 행사를 먼저 보여드릴게요` : `${store.name}을 단골 매장으로 정했어요` /* COPY_TODO.md */,
+      );
+      navigate('/', { replace: true });
+      return;
+    }
     if (store.id !== favoriteStore.id) {
       setFavoriteStore(store.id);
       showToast(
@@ -61,12 +73,14 @@ export default function Stores() {
       </div>
       <p className={styles.hint}>예) 양재동, 서초농협</p>
 
-      <section className={styles.current} aria-labelledby="stores-current">
-        <h2 id="stores-current" className={styles.sectionTitle}>
-          현재 단골 매장
-        </h2>
-        <StoreRow store={favoriteStore} isCurrent onSelect={handleSelect} />
-      </section>
+      {!onboarding && (
+        <section className={styles.current} aria-labelledby="stores-current">
+          <h2 id="stores-current" className={styles.sectionTitle}>
+            현재 단골 매장
+          </h2>
+          <StoreRow store={favoriteStore} isCurrent onSelect={handleSelect} />
+        </section>
+      )}
 
       <section className={styles.nearby} aria-labelledby="stores-nearby">
         <div className={styles.nearbyHead}>

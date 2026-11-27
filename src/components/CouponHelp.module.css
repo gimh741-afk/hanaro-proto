@@ -1,0 +1,43 @@
+/* 글자 링크 — S-2 "전국 공통 행사 보기"와 같은 그린 13px, 터치 영역 44px 이상 */
+.link {
+  position: relative;
+  align-self: flex-start;
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+  color: var(--green-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-body-2);
+  color: var(--ink-900);
+}
+
+.num {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--green-50);
+  color: var(--green-700);
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+}

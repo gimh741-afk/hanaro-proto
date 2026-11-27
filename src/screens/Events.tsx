@@ -9,14 +9,14 @@ import { Button } from '../components/Button';
 import { Chip } from '../components/Chip';
 import { HeartIcon } from '../components/Heart';
 import { useLoginGate } from '../components/LoginSheet';
-import { ProductCard, WatchCard } from '../components/ProductCard';
+import { FlyerItemCard, ProductCard, WatchCard } from '../components/ProductCard';
 import { StatusBar } from '../components/StatusBar';
 import { StoreRow } from '../components/StoreRow';
 import { TabBar } from '../components/TabBar';
 import { useToast } from '../components/Toast';
 import { getProduct, PRODUCTS, TOTAL_EVENT_PRODUCT_COUNT } from '../data/products';
 import { EVENT_PERIOD, getNearbyEventStores, type Store } from '../data/stores';
-import { FREQUENT_PURCHASES, getWishEntry, type WishEntry } from '../data/wishlist';
+import { FREQUENT_PURCHASES, getWishEntry, WATCH_ITEMS, type WatchItem, type WishEntry } from '../data/wishlist';
 import { useAppState } from '../state/AppStateContext';
 import { getDiscountLines } from '../utils/discounts';
 import { formatWon } from '../utils/format';
@@ -27,7 +27,7 @@ const CATEGORIES = ['신선식품', '가공식품', '생활용품'] as const;
 
 /** B0-2(비회원) · B2-2(회원) 이번 주 행사 — 두 화면은 같다. 전단 미등록 매장이면 S-2 빈 상태. */
 export default function Events() {
-  const { isLoggedIn, favoriteStore } = useAppState();
+  const { isLoggedIn, favoriteStore, publishedWishItems } = useAppState();
   const showToast = useToast();
   const requireLogin = useLoginGate();
   const soon = () => showToast('준비 중이에요');
@@ -58,12 +58,16 @@ export default function Events() {
       <div className={styles.info}>
         <p className={styles.storePeriod}>
           <img src={pinIcon} width={16} height={16} alt="" />
-          {favoriteStore.name} · {EVENT_PERIOD.label}
+          {favoriteStore.name}
+          {/* 전단 미등록 매장은 이번 주 행사 기간·전단 이미지가 없어서 숨긴다 */}
+          {!isPreparing && ` · ${EVENT_PERIOD.label}`}
         </p>
-        <button type="button" className={styles.flyer} onClick={soon}>
-          <img src={image14} width={14} height={14} alt="" />
-          전단 이미지
-        </button>
+        {!isPreparing && (
+          <button type="button" className={styles.flyer} onClick={soon}>
+            <img src={image14} width={14} height={14} alt="" />
+            전단 이미지
+          </button>
+        )}
       </div>
 
       {isPreparing ? (
@@ -103,6 +107,12 @@ export default function Events() {
                     <ProductCard product={p} conditions={getDiscountLines(p, favoriteStore.id)} />
                   </li>
                 ))}
+                {/* 담당자가 정리된 상품으로 게시한 전단에만 있는 상품 (깐마늘 1kg) */}
+                {publishedWishItems.map(({ id, info }) => (
+                  <li key={id}>
+                    <FlyerItemCard id={id} info={info} />
+                  </li>
+                ))}
               </ul>
             </>
           )}
@@ -119,7 +129,7 @@ export default function Events() {
  * ② 자주 산 상품 추천(최근 영수증 기준, 이번 주 행사 상품만). 추천의 하트를 누르면 ①로 올라간다.
  */
 function WishlistView() {
-  const { wishlistIds, favoriteStore } = useAppState();
+  const { wishlistIds, favoriteStore, getPublishedFlyerItem } = useAppState();
   const entries = wishlistIds.map(getWishEntry).filter((e): e is WishEntry => e !== undefined);
   const recommendations = FREQUENT_PURCHASES.filter((r) => !wishlistIds.includes(r.productId));
 
@@ -147,7 +157,7 @@ function WishlistView() {
                 </li>
               ) : (
                 <li key={e.item.id}>
-                  <WatchCard item={e.item} storeName={favoriteStore.name} />
+                  {renderWatch(e.item.id)}
                 </li>
               ),
             )}
@@ -184,6 +194,14 @@ function WishlistView() {
       <p className={styles.wishNote}>계산하면 받은 할인을 영수증과 맞춰서 알려드려요</p>
     </>
   );
+
+  /** 행사 정보가 없던 찜 상품 — 담당자가 전단을 게시했으면 행사 상품 카드, 아니면 회색 카드 */
+  function renderWatch(id: WatchItem['id']) {
+    const info = getPublishedFlyerItem(id);
+    if (info) return <FlyerItemCard id={id} info={info} tag="이번 주 행사" />;
+    const item = WATCH_ITEMS.find((w) => w.id === id)!;
+    return <WatchCard item={item} storeName={favoriteStore.name} />;
+  }
 }
 
 /** S-2: 행사 준비 중 매장. 막다른 화면이 되지 않게 근처 행사 매장으로 이어 준다 (동작 규칙 8). */
@@ -226,9 +244,9 @@ function PreparingState() {
           근처 매장은 지금 행사 중이에요
         </h2>
         <ul className={styles.nearbyList}>
-          {nearby.map(({ store, distanceKm }) => (
+          {nearby.map((store) => (
             <li key={store.id}>
-              <StoreRow store={store} distanceKm={distanceKm} onSelect={switchStore} />
+              <StoreRow store={store} onSelect={switchStore} />
             </li>
           ))}
         </ul>

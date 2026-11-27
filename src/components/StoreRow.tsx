@@ -8,12 +8,11 @@ type StoreRowProps = {
   store: Store;
   /** 현재 단골 매장이면 초록 배경 + "현재 단골" */
   isCurrent?: boolean;
-  /** 기본값은 store.distanceKm(사용자 위치 기준). S-2처럼 다른 기준 거리를 보여 줄 때 넘긴다. */
-  distanceKm?: number;
   onSelect?: (store: Store) => void;
 };
 
-export function StoreRow({ store, isCurrent = false, distanceKm = store.distanceKm, onSelect }: StoreRowProps) {
+/** 거리는 모든 화면에서 store.distanceKm(현재 위치 기준) 하나만 쓴다 */
+export function StoreRow({ store, isCurrent = false, onSelect }: StoreRowProps) {
   const badge = isCurrent ? (
     <span className={`${styles.badge} ${styles.badgeCurrent}`}>
       <img src={checkIcon} width={14} height={14} alt="" />
@@ -38,7 +37,7 @@ export function StoreRow({ store, isCurrent = false, distanceKm = store.distance
       <span className={styles.info}>
         <span className={styles.name}>하나로마트 {store.name}</span>
         <span className={styles.meta}>
-          {store.district} · {distanceKm.toFixed(1)}km
+          {store.district} · {store.distanceKm.toFixed(1)}km
         </span>
       </span>
       {badge}

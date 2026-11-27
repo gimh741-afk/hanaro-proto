@@ -98,3 +98,17 @@
   color: var(--gray-700);
   text-align: center;
 }
+
+/* N장 모두 받기 — 요약 아래, 버튼 높이 48 */
+.claimAll {
+  margin-top: 8px;
+}
+
+.claimAll:disabled {
+  opacity: 1;
+  color: var(--green-700);
+}
+
+.help {
+  margin-top: 6px;
+}

@@ -1,0 +1,88 @@
+/* 첫 실행 · 권한 안내 — Figma 화면 없음. 다른 화면 토큰(좌우 20, Title 24, 행 아이콘 원)으로 구성 */
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--white);
+}
+
+.body {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  gap: 12px;
+  padding: 40px var(--side) 0;
+}
+
+.brand {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-bold);
+  color: var(--green-600);
+}
+
+.title {
+  font-size: var(--fs-title-1);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+  color: var(--ink-900);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-14);
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background: var(--green-50);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.optional {
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-regular);
+  color: var(--gray-700);
+}
+
+.desc {
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.note {
+  margin-top: 4px;
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}
+
+.cta {
+  padding: 24px var(--side) calc(24px + env(safe-area-inset-bottom, 0px));
+}

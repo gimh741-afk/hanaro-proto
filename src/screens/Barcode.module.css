@@ -149,7 +149,6 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  margin: 14px var(--side) 0;
   font-size: var(--fs-caption-1);
   font-weight: var(--fw-medium);
   color: var(--green-700);
@@ -159,4 +158,13 @@
   content: '';
   position: absolute;
   inset: -14px -8px;
+}
+
+/* 바코드 아래 글자 링크 두 개 — 쿠폰 적용 안내 · 방금 장보기 결과 */
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 18px var(--side) 0;
 }

@@ -15,8 +15,8 @@ export interface Store {
 export const EVENT_PERIOD = {
   start: '2025-11-27',
   end: '2025-12-03',
-  label: '11.27(목) – 12.03(수)',
-  startLabel: '11.27(목)',
+  label: '11.27 – 12.03',
+  startLabel: '11.27',
 } as const;
 
 // prettier-ignore
@@ -42,22 +42,17 @@ export function getStore(id: StoreId): Store {
   return store;
 }
 
+/** 가까운 순 (현재 위치 기준 distanceKm) — 단골 매장 고르기·첫 실행 매장 선택 */
+export function sortByDistance(stores: readonly Store[]): Store[] {
+  return [...stores].sort((a, b) => a.distanceKm - b.distanceKm);
+}
+
 /**
- * 행사 준비 중 매장의 빈 상태(S-2) "근처 매장은 지금 행사 중이에요" 목록.
- * 거리는 사용자 위치가 아니라 그 매장에서 잰 거리다 (Figma S-2: 양재점 1.9km, 서초점 2.6km).
- * 내곡점은 Figma에 없어서 사용자 기준 거리로 가까운 행사 중 매장 2곳을 보여 준다.
+ * 행사 준비 중 매장의 빈 상태(S-2) "근처 매장은 지금 행사 중이에요" 목록 — 행사 중 매장 중 가까운 2곳.
+ * 거리는 단골 매장 고르기와 같은 '현재 위치 기준' 값을 쓴다 (2026-11-27, 화면마다 거리가 달라 보이던 문제).
  */
-export function getNearbyEventStores(id: StoreId): { store: Store; distanceKm: number }[] {
-  if (id === 'umyeon') {
-    return [
-      { store: getStore('yangjae'), distanceKm: 1.9 },
-      { store: getStore('seocho'), distanceKm: 2.6 },
-    ];
-  }
-  return STORES.filter((s) => s.eventStatus === 'active')
-    .sort((a, b) => a.distanceKm - b.distanceKm)
-    .slice(0, 2)
-    .map((store) => ({ store, distanceKm: store.distanceKm }));
+export function getNearbyEventStores(_id: StoreId): Store[] {
+  return sortByDistance(STORES.filter((s) => s.eventStatus === 'active')).slice(0, 2);
 }
 
 export function isStoreId(value: unknown): value is StoreId {

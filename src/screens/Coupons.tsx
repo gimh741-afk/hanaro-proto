@@ -1,12 +1,14 @@
 import { useState, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import checkIcon from '../assets/icons/check-14-green.svg';
+import { Button } from '../components/Button';
 import { CouponCard, type CouponCardState } from '../components/CouponCard';
+import { CouponHelp } from '../components/CouponHelp';
 import { useLoginGate } from '../components/LoginSheet';
 import { StatusBar } from '../components/StatusBar';
 import { TabBar } from '../components/TabBar';
 import { useToast } from '../components/Toast';
-import { COUPONS, isCouponUsableAt, type Coupon } from '../data/coupons';
+import { COUPONS, isCouponUsableAt, sumCouponAmount, type Coupon } from '../data/coupons';
 import { useAppState } from '../state/AppStateContext';
 import { formatWon } from '../utils/format';
 import styles from './Coupons.module.css';
@@ -27,6 +29,19 @@ export default function Coupons() {
 
   const stateOf = (c: Coupon): CouponCardState =>
     isCouponClaimed(c.id) ? 'claimed' : isCouponUsableAt(c, favoriteStore.id) ? 'claimable' : 'unavailable';
+
+  // 단골 매장에서 받을 수 있는 쿠폰을 한 번에 (다른 매장 전용 쿠폰은 claimableCoupons에 없다)
+  const handleClaimAll = () => {
+    const targets = claimableCoupons;
+    if (targets.length === 0) return;
+    requireLogin({
+      title: `로그인하고 ${formatWon(sumCouponAmount(targets))} 쿠폰 ${targets.length}장 받기`,
+      onLoggedIn: () => {
+        targets.forEach((c) => claimCoupon(c.id));
+        showToast('받은 쿠폰은 바코드에 자동으로 담겼어요');
+      },
+    });
+  };
 
   const handleClaim = (c: Coupon) =>
     requireLogin({
@@ -69,6 +84,17 @@ export default function Coupons() {
           <img src={checkIcon} width={14} height={14} alt="" />
           받은 쿠폰은 계산할 때 바코드로 자동 할인돼요
         </p>
+        <Button
+          variant={claimableCoupons.length > 0 ? 'primary' : 'tint'}
+          className={styles.claimAll}
+          disabled={claimableCoupons.length === 0}
+          onClick={handleClaimAll}
+        >
+          {claimableCoupons.length > 0
+            ? `${claimableCoupons.length}장 모두 받기`
+            : '모두 받았어요' /* COPY_TODO.md */}
+        </Button>
+        <CouponHelp className={styles.help} />
       </div>
 
       <div className={styles.segment} role="tablist" aria-label="쿠폰 목록">

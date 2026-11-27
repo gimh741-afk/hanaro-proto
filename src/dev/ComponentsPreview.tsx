@@ -52,7 +52,7 @@ export default function ComponentsPreview() {
             <ProductCard
               key={p.id}
               product={p}
-              caption={p.id === 'jeju-tangerine' ? '~12.03(수)까지 · 쿠폰 적용가' : undefined}
+              caption={p.id === 'jeju-tangerine' ? '~12.03까지 · 쿠폰 적용가' : undefined}
             />
           ))}
         </div>
