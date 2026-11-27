@@ -188,3 +188,52 @@
   position: absolute;
   inset: -14px -8px;
 }
+
+/* ---------- '찜한 상품' 필터 ---------- */
+
+.wishChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 묶음 사이 간격 28, 제목 줄 py10 (정렬 줄과 같은 높이) */
+.wishSection + .wishSection {
+  margin-top: 28px;
+}
+
+.wishHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px var(--side) 12px;
+}
+
+.wishTitle {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  color: var(--ink-900);
+}
+
+.wishMeta {
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+  white-space: nowrap;
+}
+
+.wishEmpty {
+  padding: 24px var(--side) 8px;
+  font-size: var(--fs-body-2);
+  color: var(--gray-700);
+  text-align: center;
+}
+
+.wishNote {
+  margin: 28px var(--side) 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--gray-100);
+  font-size: var(--fs-caption-1);
+  color: var(--gray-700);
+}

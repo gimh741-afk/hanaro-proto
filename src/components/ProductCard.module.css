@@ -107,6 +107,42 @@
   background: rgba(255, 255, 255, 0.9);
 }
 
-.like img {
+.like svg {
   position: relative;
+}
+
+/* 카드 맨 아래 칩 — 찜한 상품 필터의 "이번 주 행사" · "지난 구매보다 1,000원 저렴" */
+.tag {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 3px 8px;
+  border-radius: var(--radius-6);
+  background: var(--green-50);
+  color: var(--green-700);
+  font-size: var(--fs-caption-2);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 행사 정보가 없는 찜 상품 — 회색 카드 */
+.watch .image {
+  display: grid;
+  place-items: center;
+  background: var(--gray-100);
+}
+
+.watchIcon {
+  opacity: 0.6;
+}
+
+.watch .name {
+  color: var(--gray-700);
+}
+
+.watchNote {
+  font-size: var(--fs-caption-2);
+  color: var(--gray-500);
+  line-height: 1.4;
 }

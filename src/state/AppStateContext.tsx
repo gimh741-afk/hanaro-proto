@@ -8,6 +8,7 @@ import {
   type CouponId,
 } from '../data/coupons';
 import { DEFAULT_STORE_ID, getStore, isStoreId, type Store, type StoreId } from '../data/stores';
+import { DEFAULT_WISHLIST, isWishId, type WishId } from '../data/wishlist';
 
 /* ------------------------------------------------------------------ */
 /* 상태 모양                                                            */
@@ -28,6 +29,8 @@ export interface AppState {
   isManager: boolean;
   favoriteStoreId: StoreId;
   claimedCouponIds: CouponId[];
+  /** 찜한 상품 (이번 주 행사 상품 + 행사 정보가 없는 상품). 회원 초기값 2개 */
+  wishlistIds: WishId[];
   /** 담당자가 이번 주 전단을 고객에게 게시한 방식 — items: 정리된 상품으로, image: 전단 이미지 그대로 (M-1 최근 올린 전단 목록) */
   publishedFlyer: PublishedFlyer | null;
   /** `?scenario=auth-fail` 처럼 URL로 들어온 테스트 시나리오. 라우트 이동 뒤에도 기억한다. */
@@ -36,12 +39,16 @@ export interface AppState {
 
 const STORAGE_KEY = 'hanaro-proto:v1';
 
+/** `?scenario=after-checkout`으로 바로 여는 화면 */
+export const RECEIPT_PATH = '/my/receipt';
+
 function createDefaultState(overrides: Partial<AppState> = {}): AppState {
   return {
     isLoggedIn: false,
     isManager: false,
     favoriteStoreId: DEFAULT_STORE_ID,
     claimedCouponIds: [],
+    wishlistIds: [...DEFAULT_WISHLIST],
     publishedFlyer: null,
     scenario: null,
     ...overrides,
@@ -64,6 +71,7 @@ function loadStoredState(): AppState | null {
       isManager: p.isLoggedIn === true && p.isManager === true,
       favoriteStoreId: isStoreId(p.favoriteStoreId) ? p.favoriteStoreId : DEFAULT_STORE_ID,
       claimedCouponIds: Array.isArray(p.claimedCouponIds) ? p.claimedCouponIds.filter(isCouponId) : [],
+      wishlistIds: Array.isArray(p.wishlistIds) ? p.wishlistIds.filter(isWishId) : [...DEFAULT_WISHLIST],
       publishedFlyer: p.publishedFlyer === 'items' || p.publishedFlyer === 'image' ? p.publishedFlyer : null,
       scenario: toScenario(p.scenario),
     });
@@ -102,6 +110,7 @@ function clearStoredState() {
  * - `?start=manager`  신촌점 담당자 계정 (MY > 매장 관리 → 전단 올리기 흐름 시연용)
  * - `?scenario=auth-fail`  로그인 시 /auth/recover로 보내는 시나리오를 켠다
  * - `?scenario=flyer-fail` 담당자가 올린 전단에서 글자를 읽지 못하는 실패 경로를 켠다
+ * - `?scenario=after-checkout` 방금 계산을 마친 상태(감귤·김장맞이 쿠폰 받음)로 영수증 · 할인 확인 화면에서 시작한다
  *
  * 처리한 `start`, `reset`, `scenario` 파라미터는 주소에서 지워서 새로고침해도 진행 상황이 초기화되지 않게 한다.
  */
@@ -113,6 +122,8 @@ export function resolveInitialState(): AppState {
   const start = params.get('start');
   const scenarioParam = params.get('scenario');
   const scenario = toScenario(scenarioParam);
+  // 계산 직후 데모: 상태에 남기지 않고 시작 화면·받은 쿠폰만 정한다
+  const afterCheckout = scenarioParam === 'after-checkout';
 
   if (reset) clearStoredState();
 
@@ -132,7 +143,13 @@ export function resolveInitialState(): AppState {
     params.delete('reset');
     params.delete('scenario');
     const search = params.toString();
-    window.history.replaceState(window.history.state, '', `${url.pathname}${search ? `?${search}` : ''}${url.hash}`);
+    const pathname = afterCheckout ? RECEIPT_PATH : url.pathname;
+    window.history.replaceState(window.history.state, '', `${pathname}${search ? `?${search}` : ''}${url.hash}`);
+  }
+
+  if (afterCheckout) {
+    // 영수증의 감귤 상품쿠폰이 적용됐고, 김장맞이 쿠폰은 받았지만 최소 금액이 모자라 적용되지 않은 상태
+    state = { ...state, isLoggedIn: true, claimedCouponIds: ['tangerine-2196', 'kimjang-4000'] };
   }
 
   saveState(state);
@@ -151,11 +168,15 @@ export interface AppStateValue extends AppState {
   /** 받은 쿠폰 (내 쿠폰) */
   myCoupons: Coupon[];
   isCouponClaimed: (id: CouponId) => boolean;
+  /** 찜한 상품인지 — 비회원에게는 항상 false (찜은 로그인 후) */
+  isWished: (id: WishId) => boolean;
 
   login: () => void;
   logout: () => void;
   setFavoriteStore: (id: StoreId) => void;
   claimCoupon: (id: CouponId) => void;
+  /** 찜을 켜거나 끈다 */
+  setWished: (id: WishId, on: boolean) => void;
   /** 인증 실패 시나리오를 끝낸다 (S-1에서 다시 인증하면 성공 처리) */
   clearScenario: () => void;
   /** 저장된 상태를 지우고 기본 상태로 되돌린다 (개발용 메뉴) */
@@ -185,6 +206,15 @@ export function AppStateProvider({ initialState, children }: { initialState: App
       setState((s) => (s.claimedCouponIds.includes(id) ? s : { ...s, claimedCouponIds: [...s.claimedCouponIds, id] })),
     [],
   );
+  const setWished = useCallback(
+    (id: WishId, on: boolean) =>
+      setState((s) => {
+        const has = s.wishlistIds.includes(id);
+        if (has === on) return s;
+        return { ...s, wishlistIds: on ? [...s.wishlistIds, id] : s.wishlistIds.filter((w) => w !== id) };
+      }),
+    [],
+  );
   const clearScenario = useCallback(() => setState((s) => ({ ...s, scenario: null })), []);
   const resetAll = useCallback(() => {
     clearStoredState();
@@ -207,17 +237,19 @@ export function AppStateProvider({ initialState, children }: { initialState: App
       claimableAmount: sumCouponAmount(claimableCoupons),
       myCoupons: COUPONS.filter((c) => state.claimedCouponIds.includes(c.id)),
       isCouponClaimed: (id) => state.claimedCouponIds.includes(id),
+      isWished: (id) => state.isLoggedIn && state.wishlistIds.includes(id),
       login,
       logout,
       setFavoriteStore,
       claimCoupon,
+      setWished,
       clearScenario,
       resetAll,
       startAs,
       publishFlyer,
       patchState,
     };
-  }, [state, login, logout, setFavoriteStore, claimCoupon, clearScenario, resetAll, startAs, publishFlyer, patchState]);
+  }, [state, login, logout, setFavoriteStore, claimCoupon, setWished, clearScenario, resetAll, startAs, publishFlyer, patchState]);
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
 }

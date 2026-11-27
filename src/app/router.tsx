@@ -7,6 +7,7 @@ import Events from '../screens/Events';
 import Home from '../screens/Home';
 import My from '../screens/My';
 import ProductDetail from '../screens/ProductDetail';
+import Receipt from '../screens/Receipt';
 import Stores from '../screens/Stores';
 import FlyerReview from '../screens/manage/FlyerReview';
 import FlyerUpload from '../screens/manage/FlyerUpload';
@@ -43,6 +44,7 @@ export function AppRoutes() {
       <Route path="/coupons" element={<Coupons />} />
       <Route path="/barcode" element={<Barcode />} />
       <Route path="/my" element={<My />} />
+      <Route path="/my/receipt" element={<Receipt />} />
       <Route path="/auth/recover" element={<AuthRecover />} />
       <Route
         path="/manage"

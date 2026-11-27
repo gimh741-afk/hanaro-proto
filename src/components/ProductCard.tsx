@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
-import heartIcon from '../assets/icons/heart.svg';
 import { PRODUCT_IMAGES, type ProductImage } from '../assets/products';
+import imageIcon from '../assets/icons/image-30.svg';
 import type { Product } from '../data/products';
+import type { WatchItem } from '../data/wishlist';
+import { useAppState } from '../state/AppStateContext';
 import { formatWon } from '../utils/format';
+import { HeartIcon, useWishToggle } from './Heart';
 import styles from './ProductCard.module.css';
-import { useToast } from './Toast';
 
 type ProductCardProps = {
   product: Product;
@@ -17,13 +19,16 @@ type ProductCardProps = {
    * 최대 2줄까지 보여 주고, 나머지는 "할인 N개 더"로 접는다.
    */
   conditions?: string[];
-  onLikeClick?: (product: Product) => void;
+  /** 카드 맨 아래 작은 칩 (찜한 상품 필터: "이번 주 행사", "지난 구매보다 1,000원 저렴") */
+  tag?: string;
 };
 
 const MAX_CONDITION_LINES = 2;
 
-export function ProductCard({ product, image, caption, conditions = [], onLikeClick }: ProductCardProps) {
-  const showToast = useToast();
+export function ProductCard({ product, image, caption, conditions = [], tag }: ProductCardProps) {
+  const { isWished } = useAppState();
+  const toggleWish = useWishToggle();
+  const wished = isWished(product.id);
   const text = caption ?? (product.endsLabel ? `~${product.endsLabel}` : undefined);
   const img = image ?? PRODUCT_IMAGES[product.id];
 
@@ -48,15 +53,39 @@ export function ProductCard({ product, image, caption, conditions = [], onLikeCl
           </ul>
         )}
         {text && <p className={styles.caption}>{text}</p>}
+        {tag && <span className={styles.tag}>{tag}</span>}
       </Link>
-      <button
-        type="button"
-        className={styles.like}
-        aria-label={`${product.name} 찜하기`}
-        onClick={() => (onLikeClick ? onLikeClick(product) : showToast('준비 중이에요'))}
-      >
-        <img src={heartIcon} width={16} height={16} alt="" />
-      </button>
+      <LikeButton label={product.name} wished={wished} onClick={() => toggleWish(product.id)} />
+    </article>
+  );
+}
+
+/** 카드 오른쪽 위 찜 버튼 — 행사 정보가 없는 찜 카드(이번 주 행사 '찜한 상품')에서도 같이 쓴다 */
+export function LikeButton({ label, wished, onClick }: { label: string; wished: boolean; onClick: () => void }) {
+  return (
+    <button type="button" className={styles.like} aria-label={`${label} 찜하기`} aria-pressed={wished} onClick={onClick}>
+      <HeartIcon size={16} filled={wished} />
+    </button>
+  );
+}
+
+/**
+ * 행사 정보가 없는 찜 상품 카드 (회색) — 이번 주 행사 '찜한 상품'에서만 쓴다.
+ * 상세 화면이 없어서 카드 자체는 누를 수 없고, 하트로 찜만 끌 수 있다.
+ */
+export function WatchCard({ item, storeName }: { item: WatchItem; storeName: string }) {
+  const { isWished } = useAppState();
+  const toggleWish = useWishToggle();
+  return (
+    <article className={`${styles.card} ${styles.watch}`}>
+      <div className={styles.link}>
+        <div className={styles.image}>
+          <img className={styles.watchIcon} src={imageIcon} width={30} height={30} alt="" />
+        </div>
+        <p className={styles.name}>{item.name}</p>
+        <p className={styles.watchNote}>아직 {storeName} 행사 정보가 없어요</p>
+      </div>
+      <LikeButton label={item.name} wished={isWished(item.id)} onClick={() => toggleWish(item.id)} />
     </article>
   );
 }

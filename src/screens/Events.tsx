@@ -4,27 +4,44 @@ import image30 from '../assets/icons/image-30.svg';
 import pinIcon from '../assets/icons/pin-16-green.svg';
 import search24 from '../assets/icons/search-24.svg';
 import sortIcon from '../assets/icons/sort-14.svg';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Chip } from '../components/Chip';
-import { ProductCard } from '../components/ProductCard';
+import { HeartIcon } from '../components/Heart';
+import { useLoginGate } from '../components/LoginSheet';
+import { ProductCard, WatchCard } from '../components/ProductCard';
 import { StatusBar } from '../components/StatusBar';
 import { StoreRow } from '../components/StoreRow';
 import { TabBar } from '../components/TabBar';
 import { useToast } from '../components/Toast';
-import { PRODUCTS, TOTAL_EVENT_PRODUCT_COUNT } from '../data/products';
+import { getProduct, PRODUCTS, TOTAL_EVENT_PRODUCT_COUNT } from '../data/products';
 import { EVENT_PERIOD, getNearbyEventStores, type Store } from '../data/stores';
+import { FREQUENT_PURCHASES, getWishEntry, type WishEntry } from '../data/wishlist';
 import { useAppState } from '../state/AppStateContext';
 import { getDiscountLines } from '../utils/discounts';
+import { formatWon } from '../utils/format';
 import styles from './Events.module.css';
 
-const CATEGORIES = ['전체', '신선식품', '가공식품', '생활용품'] as const;
+/** '찜한 상품'은 전체 바로 뒤 (하트 아이콘). 신선식품·가공식품·생활용품은 아직 "준비 중이에요" */
+const CATEGORIES = ['신선식품', '가공식품', '생활용품'] as const;
 
 /** B0-2(비회원) · B2-2(회원) 이번 주 행사 — 두 화면은 같다. 전단 미등록 매장이면 S-2 빈 상태. */
 export default function Events() {
   const { isLoggedIn, favoriteStore } = useAppState();
   const showToast = useToast();
+  const requireLogin = useLoginGate();
   const soon = () => showToast('준비 중이에요');
   const isPreparing = favoriteStore.eventStatus === 'preparing';
+
+  // 필터는 주소(?filter=wish)에 둔다 — 상품 상세에서 뒤로 와도, MY > 관심상품으로 들어와도 같은 필터
+  const [params, setParams] = useSearchParams();
+  const wishFilter = isLoggedIn && params.get('filter') === 'wish';
+  const showAll = () => setParams({}, { replace: true });
+  const showWish = () =>
+    requireLogin({
+      title: '로그인하면 찜한 상품을 한눈에 볼 수 있어요' /* COPY_TODO.md */,
+      onLoggedIn: () => setParams({ filter: 'wish' }, { replace: true }),
+    });
 
   return (
     // Maze T0 성공: 비회원으로 행사 목록 진입
@@ -54,33 +71,118 @@ export default function Events() {
       ) : (
         <>
           <div className={styles.chips} role="group" aria-label="상품 분류">
+            <Chip selected={!wishFilter} onClick={showAll}>
+              전체
+            </Chip>
+            <Chip selected={wishFilter} className={styles.wishChip} onClick={showWish}>
+              <HeartIcon size={16} px={14} filled={false} color={wishFilter ? 'var(--white)' : 'var(--gray-700)'} />
+              찜한 상품
+            </Chip>
             {CATEGORIES.map((c) => (
-              <Chip key={c} selected={c === '전체'} onClick={c === '전체' ? undefined : soon}>
+              <Chip key={c} onClick={soon}>
                 {c}
               </Chip>
             ))}
           </div>
 
-          <div className={styles.sort}>
-            <p>총 {TOTAL_EVENT_PRODUCT_COUNT}개</p>
-            <button type="button" className={styles.sortButton} onClick={soon}>
-              <img src={sortIcon} width={14} height={14} alt="" />
-              혜택 큰 순
-            </button>
-          </div>
+          {wishFilter ? (
+            <WishlistView />
+          ) : (
+            <>
+              <div className={styles.sort}>
+                <p>총 {TOTAL_EVENT_PRODUCT_COUNT}개</p>
+                <button type="button" className={styles.sortButton} onClick={soon}>
+                  <img src={sortIcon} width={14} height={14} alt="" />
+                  혜택 큰 순
+                </button>
+              </div>
 
-          <ul className={styles.grid}>
-            {PRODUCTS.map((p) => (
-              <li key={p.id}>
-                <ProductCard product={p} conditions={getDiscountLines(p, favoriteStore.id)} />
-              </li>
-            ))}
-          </ul>
+              <ul className={styles.grid}>
+                {PRODUCTS.map((p) => (
+                  <li key={p.id}>
+                    <ProductCard product={p} conditions={getDiscountLines(p, favoriteStore.id)} />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </>
       )}
 
       <TabBar />
     </div>
+  );
+}
+
+/**
+ * '찜한 상품' 필터 — ① 찜한 상품(이번 주 행사면 기존 카드 + "이번 주 행사", 아니면 회색 카드)
+ * ② 자주 산 상품 추천(최근 영수증 기준, 이번 주 행사 상품만). 추천의 하트를 누르면 ①로 올라간다.
+ */
+function WishlistView() {
+  const { wishlistIds, favoriteStore } = useAppState();
+  const entries = wishlistIds.map(getWishEntry).filter((e): e is WishEntry => e !== undefined);
+  const recommendations = FREQUENT_PURCHASES.filter((r) => !wishlistIds.includes(r.productId));
+
+  return (
+    <>
+      <section className={styles.wishSection} aria-labelledby="wish-title">
+        <div className={styles.wishHead}>
+          <h2 id="wish-title" className={styles.wishTitle}>
+            찜한 상품
+          </h2>
+          <p className={styles.wishMeta}>{entries.length}개</p>
+        </div>
+        {entries.length === 0 ? (
+          <p className={styles.wishEmpty}>하트를 누른 상품이 여기에 모여요{/* COPY_TODO.md */}</p>
+        ) : (
+          <ul className={styles.grid}>
+            {entries.map((e) =>
+              e.kind === 'event' ? (
+                <li key={e.product.id}>
+                  <ProductCard
+                    product={e.product}
+                    conditions={getDiscountLines(e.product, favoriteStore.id)}
+                    tag="이번 주 행사"
+                  />
+                </li>
+              ) : (
+                <li key={e.item.id}>
+                  <WatchCard item={e.item} storeName={favoriteStore.name} />
+                </li>
+              ),
+            )}
+          </ul>
+        )}
+      </section>
+
+      {recommendations.length > 0 && (
+        <section className={styles.wishSection} aria-labelledby="frequent-title">
+          <div className={styles.wishHead}>
+            <h2 id="frequent-title" className={styles.wishTitle}>
+              자주 산 상품 추천
+            </h2>
+            <p className={styles.wishMeta}>최근 영수증 기준</p>
+          </div>
+          <ul className={styles.grid}>
+            {recommendations.map((r) => {
+              const product = getProduct(r.productId);
+              if (!product) return null;
+              return (
+                <li key={r.productId}>
+                  <ProductCard
+                    product={product}
+                    conditions={getDiscountLines(product, favoriteStore.id)}
+                    tag={r.cheaperThanLastBy ? `지난 구매보다 ${formatWon(r.cheaperThanLastBy)} 저렴` : undefined}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      <p className={styles.wishNote}>계산하면 받은 할인을 영수증과 맞춰서 알려드려요</p>
+    </>
   );
 }
 

@@ -142,3 +142,21 @@
   font-size: var(--fs-caption-2);
   color: var(--gray-700);
 }
+
+/* 바코드 아래 링크 — 영수증 · 할인 확인으로 (S-2 "전국 공통 행사 보기"와 같은 글자 링크) */
+.receiptLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin: 14px var(--side) 0;
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+  color: var(--green-700);
+}
+
+.receiptLink::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}

@@ -1,4 +1,5 @@
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import chevRightGreen from '../assets/icons/chev-right-14-green.svg';
 import barcodeImage from '../assets/icons/barcode.svg';
 import coinIcon from '../assets/icons/coin-18-green.svg';
 import pinIcon from '../assets/icons/pin-14-green.svg';
@@ -96,6 +97,12 @@ export default function Barcode() {
       </section>
 
       <p className={styles.footnote}>계산대에서 이 화면만 보여주세요</p>
+
+      {/* 계산을 마친 뒤 받은 할인이 영수증에 반영됐는지 확인 */}
+      <Link to="/my/receipt" className={styles.receiptLink}>
+        방금 장보기 결과 보기
+        <img src={chevRightGreen} width={14} height={14} alt="" />
+      </Link>
 
       <TabBar />
     </div>

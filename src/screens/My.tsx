@@ -25,7 +25,7 @@ interface MenuItem {
  * 맨 아래 버전 글자를 1.5초 안에 5번 누르면 개발용 메뉴가 열린다 (Maze 테스트 지원).
  */
 export default function My() {
-  const { isLoggedIn, isManager, favoriteStore, logout } = useAppState();
+  const { isLoggedIn, isManager, favoriteStore, wishlistIds, logout } = useAppState();
   const navigate = useNavigate();
   const showToast = useToast();
   const [devOpen, setDevOpen] = useState(false);
@@ -42,14 +42,14 @@ export default function My() {
     }
   };
 
-  // 포인트·영수증·관심상품은 다음 화면이 없어 "준비 중이에요" (CLAUDE.md 작업 원칙)
+  // 포인트는 다음 화면이 없어 "준비 중이에요" (CLAUDE.md 작업 원칙)
   const soon = () => showToast('준비 중이에요');
 
   const items: MenuItem[] = [
     { label: '단골 매장', value: favoriteStore.name, onClick: () => navigate('/stores') },
     { label: '포인트', value: `${MEMBER.nhPoint}P`, onClick: soon },
-    { label: '영수증', onClick: soon },
-    { label: '관심상품', value: `${MEMBER.wishlistCount}개`, onClick: soon },
+    { label: '영수증', onClick: () => navigate('/my/receipt') },
+    { label: '관심상품', value: `${wishlistIds.length}개`, onClick: () => navigate('/events?filter=wish') },
   ];
   if (isManager) items.push({ label: '매장 관리', onClick: () => navigate('/manage') });
 

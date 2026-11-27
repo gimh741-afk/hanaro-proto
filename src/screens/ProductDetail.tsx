@@ -1,10 +1,9 @@
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import chevLeft from '../assets/icons/chev-left.svg';
 import clockIcon from '../assets/icons/clock-20-green.svg';
-import heart22 from '../assets/icons/heart-22.svg';
-import heart24 from '../assets/icons/heart-24.svg';
 import { heroCrop, PRODUCT_IMAGES } from '../assets/products';
 import { Button } from '../components/Button';
+import { HeartIcon, useWishToggle } from '../components/Heart';
 import { useLoginGate } from '../components/LoginSheet';
 import { StatusBar } from '../components/StatusBar';
 import { useToast } from '../components/Toast';
@@ -25,14 +24,14 @@ export default function ProductDetail() {
 }
 
 function ProductDetailView({ product }: { product: Product }) {
-  const { favoriteStore } = useAppState();
+  const { favoriteStore, isWished } = useAppState();
   const navigate = useNavigate();
   const location = useLocation();
-  const showToast = useToast();
+  const toggleWish = useWishToggle();
+  const wished = isWished(product.id);
   const image = PRODUCT_IMAGES[product.id];
 
   const goBack = () => (location.key === 'default' ? navigate('/events') : navigate(-1));
-  const soon = () => showToast('준비 중이에요');
 
   const periodEnd = product.endsLabel?.replace(/까지$/, '') ?? EVENT_PERIOD.label.split(' – ')[1];
   const daysLeft = daysUntil(product.endsAt ?? EVENT_PERIOD.end);
@@ -46,8 +45,8 @@ function ProductDetailView({ product }: { product: Product }) {
         <button type="button" className={styles.navButton} aria-label="뒤로 가기" onClick={goBack}>
           <img src={chevLeft} width={26} height={26} alt="" />
         </button>
-        <button type="button" className={`${styles.navButton} ${styles.like}`} aria-label={`${product.name} 찜하기`} onClick={soon}>
-          <img src={heart24} width={24} height={24} alt="" />
+        <button type="button" className={`${styles.navButton} ${styles.like}`} aria-label={`${product.name} 찜하기`} aria-pressed={wished} onClick={() => toggleWish(product.id)}>
+          <HeartIcon size={24} filled={wished} />
         </button>
       </div>
 
@@ -101,8 +100,8 @@ function ProductDetailView({ product }: { product: Product }) {
       </div>
 
       <div className={styles.cta}>
-        <button type="button" className={styles.likeButton} aria-label={`${product.name} 찜하기`} onClick={soon}>
-          <img src={heart22} width={22} height={22} alt="" />
+        <button type="button" className={styles.likeButton} aria-label={`${product.name} 찜하기`} aria-pressed={wished} onClick={() => toggleWish(product.id)}>
+          <HeartIcon size={22} filled={wished} />
         </button>
         <CouponCta product={product} />
       </div>

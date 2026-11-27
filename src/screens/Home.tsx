@@ -113,9 +113,9 @@ function GuestBenefitCard() {
   );
 }
 
-/** B1-1 혜택 카드: 포인트·찜은 목업 회원 데이터, 받을 수 있는 쿠폰은 동작 규칙 2로 계산 */
+/** B1-1 혜택 카드: 포인트는 목업 회원 데이터, 찜은 찜 상태 개수, 받을 수 있는 쿠폰은 동작 규칙 2로 계산 */
 function MemberBenefitCard() {
-  const { claimableCoupons, claimableAmount, myCoupons } = useAppState();
+  const { claimableCoupons, claimableAmount, myCoupons, wishlistIds } = useAppState();
   const claimableCount = claimableCoupons.length;
 
   return (
@@ -134,7 +134,7 @@ function MemberBenefitCard() {
         <span className={styles.statDivider} aria-hidden="true" />
         <Stat value={claimableCount} unit="장" label="받을 수 있는 쿠폰" />
         <span className={styles.statDivider} aria-hidden="true" />
-        <Stat value={MEMBER.wishlistCount} unit="개" label="찜한 행사상품" />
+        <Stat value={wishlistIds.length} unit="개" label="찜한 행사상품" />
       </div>
 
       <Link to="/coupons" className={styles.couponButton}>
