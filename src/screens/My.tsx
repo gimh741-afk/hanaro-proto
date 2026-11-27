@@ -25,7 +25,7 @@ interface MenuItem {
  * 맨 아래 버전 글자를 1.5초 안에 5번 누르면 개발용 메뉴가 열린다 (Maze 테스트 지원).
  */
 export default function My() {
-  const { isLoggedIn, isManager, favoriteStore } = useAppState();
+  const { isLoggedIn, isManager, favoriteStore, logout } = useAppState();
   const navigate = useNavigate();
   const showToast = useToast();
   const [devOpen, setDevOpen] = useState(false);
@@ -74,6 +74,19 @@ export default function My() {
           ))}
         </ul>
       </section>
+
+      {/* 메뉴 목록과 분리된 계정 동작 — 로그인 전 화면(B0-1)으로 돌아갈 수 있게 */}
+      <button
+        type="button"
+        className={styles.logout}
+        onClick={() => {
+          logout();
+          showToast('로그아웃했어요' /* COPY_TODO.md */);
+          navigate('/');
+        }}
+      >
+        로그아웃
+      </button>
 
       {/* 개발용 메뉴 진입점: 일부러 버튼으로 드러내지 않는다 */}
       <p className={styles.version} onClick={onVersionTap}>

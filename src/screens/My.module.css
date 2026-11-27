@@ -63,6 +63,17 @@
   outline-offset: -2px;
 }
 
+/* 로그아웃 — 메뉴 목록 아래 글자 버튼 */
+.logout {
+  display: block;
+  min-height: var(--touch-min);
+  margin: 16px auto 0;
+  padding: 0 16px;
+  font-size: var(--fs-body-2);
+  color: var(--gray-700);
+  text-decoration: underline;
+}
+
 .version {
   padding: 28px var(--side) 0;
   font-size: var(--fs-caption-2);
