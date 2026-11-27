@@ -24,6 +24,8 @@ const HOME_PRODUCTS = PRODUCTS.filter((p) => p.id !== 'haenam-cabbage');
 export default function Home() {
   const { isLoggedIn, favoriteStore } = useAppState();
   const showToast = useToast();
+  // 전단 미등록 매장(우면점·내곡점): 상품·기간·전체 보기 대신 행사 탭 빈 상태(S-2)를 짧게
+  const isPreparing = favoriteStore.eventStatus === 'preparing';
 
   return (
     // Maze T1 성공: 단골 매장 = 양재점 (B1-3)
@@ -62,20 +64,43 @@ export default function Home() {
             <h2 id="home-events-title" className={styles.sectionTitle}>
               이번 주 행사
             </h2>
-            <p className={styles.sectionSub}>
-              {EVENT_PERIOD.label} · {favoriteStore.name}
-            </p>
+            {!isPreparing && (
+              <p className={styles.sectionSub}>
+                {EVENT_PERIOD.label} · {favoriteStore.name}
+              </p>
+            )}
           </div>
-          <Link to="/events" className={styles.moreLink}>
-            전체 {TOTAL_EVENT_PRODUCT_COUNT}개 보기
-            <img src={chevRight} width={16} height={16} alt="" />
-          </Link>
+          {!isPreparing && (
+            <Link to="/events" className={styles.moreLink}>
+              전체 {TOTAL_EVENT_PRODUCT_COUNT}개 보기
+              <img src={chevRight} width={16} height={16} alt="" />
+            </Link>
+          )}
         </div>
-        <div className={styles.productScroll}>
-          {HOME_PRODUCTS.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {isPreparing ? (
+          <div className={styles.preparing}>
+            <p className={styles.preparingTitle}>{favoriteStore.name}은 아직 이번 주 행사를 올리지 않았어요</p>
+            <div className={styles.preparingActions}>
+              <button
+                type="button"
+                className={styles.notifyButton}
+                onClick={() => showToast(`${favoriteStore.name} 행사 알림을 켰어요` /* COPY_TODO.md */)}
+              >
+                행사 알림 받기
+              </button>
+              <Link to="/events" className={styles.nearbyLink}>
+                근처 매장 행사 보기
+                <img src={chevRightGreen} width={16} height={16} alt="" />
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.productScroll}>
+            {HOME_PRODUCTS.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
       </section>
 
       <TabBar />

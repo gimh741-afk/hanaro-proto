@@ -4,7 +4,7 @@ import image30 from '../assets/icons/image-30.svg';
 import pinIcon from '../assets/icons/pin-16-green.svg';
 import search24 from '../assets/icons/search-24.svg';
 import sortIcon from '../assets/icons/sort-14.svg';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Chip } from '../components/Chip';
 import { HeartIcon } from '../components/Heart';
@@ -204,10 +204,14 @@ function WishlistView() {
   }
 }
 
-/** S-2: 행사 준비 중 매장. 막다른 화면이 되지 않게 근처 행사 매장으로 이어 준다 (동작 규칙 8). */
+/**
+ * S-2: 행사 준비 중 매장. 막다른 화면이 되지 않게 근처 행사 매장으로 이어 준다 (동작 규칙 8).
+ * 위치를 허용하지 않았으면 '근처 매장'과 거리 대신 [행사 중인 다른 매장 찾기] → 매장 검색(/stores).
+ */
 function PreparingState() {
-  const { favoriteStore, setFavoriteStore } = useAppState();
+  const { favoriteStore, setFavoriteStore, locationAllowed } = useAppState();
   const showToast = useToast();
+  const navigate = useNavigate();
   const nearby = getNearbyEventStores(favoriteStore.id);
 
   const switchStore = (store: Store) => {
@@ -239,17 +243,29 @@ function PreparingState() {
 
       <div className={styles.divider} aria-hidden="true" />
 
-      <section className={styles.nearby} aria-labelledby="events-nearby">
-        <h2 id="events-nearby" className={styles.nearbyTitle}>
-          근처 매장은 지금 행사 중이에요
-        </h2>
-        <ul className={styles.nearbyList}>
-          {nearby.map((store) => (
-            <li key={store.id}>
-              <StoreRow store={store} onSelect={switchStore} />
-            </li>
-          ))}
-        </ul>
+      <section
+        className={styles.nearby}
+        aria-labelledby={locationAllowed ? 'events-nearby' : undefined}
+        aria-label={locationAllowed ? undefined : '다른 매장'}
+      >
+        {locationAllowed ? (
+          <>
+            <h2 id="events-nearby" className={styles.nearbyTitle}>
+              근처 매장은 지금 행사 중이에요
+            </h2>
+            <ul className={styles.nearbyList}>
+              {nearby.map((store) => (
+                <li key={store.id}>
+                  <StoreRow store={store} onSelect={switchStore} />
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <Button variant="secondary" onClick={() => navigate('/stores')}>
+            행사 중인 다른 매장 찾기
+          </Button>
+        )}
         <button type="button" className={styles.nationwide} onClick={() => showToast('준비 중이에요')}>
           전국 공통 행사 보기
           <img src={chevRightGreen} width={14} height={14} alt="" />

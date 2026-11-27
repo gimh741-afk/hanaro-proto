@@ -279,3 +279,56 @@
   font-size: var(--fs-body-2);
   font-weight: var(--fw-medium);
 }
+
+/* 전단 미등록 매장 — 행사 탭 빈 상태(S-2)를 짧게: 문구 + [행사 알림 받기] + 근처 매장 행사 보기 */
+.preparing {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0 var(--side);
+  padding: 20px;
+  border-radius: var(--radius-16);
+  background: var(--gray-100);
+}
+
+.preparingTitle {
+  font-size: var(--fs-body-1);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+  color: var(--ink-900);
+}
+
+.preparingActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notifyButton {
+  height: var(--touch-min);
+  padding: 0 16px;
+  border-radius: var(--radius-12);
+  background: var(--green-50);
+  color: var(--green-700);
+  font-size: var(--fs-body-2);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.nearbyLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--fs-caption-1);
+  font-weight: var(--fw-medium);
+  color: var(--green-700);
+  white-space: nowrap;
+}
+
+.nearbyLink::after {
+  content: '';
+  position: absolute;
+  inset: -14px -8px;
+}
