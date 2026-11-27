@@ -199,7 +199,12 @@ export function AppStateProvider({ initialState, children }: { initialState: App
   }, [state]);
 
   const login = useCallback(() => setState((s) => ({ ...s, isLoggedIn: true })), []);
-  const logout = useCallback(() => setState((s) => ({ ...s, isLoggedIn: false, isManager: false })), []);
+  // 로그아웃하면 받은 쿠폰도 비운다 — 남겨 두면 다 받은 뒤 로그아웃했을 때 B0-1 카드가 "0원 쿠폰 0장 받기"가 된다.
+  // 다시 로그인하면 B0-1이 약속한 "{금액} 쿠폰 {N}장 받기"를 그대로 받을 수 있다.
+  const logout = useCallback(
+    () => setState((s) => ({ ...s, isLoggedIn: false, isManager: false, claimedCouponIds: [] })),
+    [],
+  );
   const setFavoriteStore = useCallback((id: StoreId) => setState((s) => ({ ...s, favoriteStoreId: id })), []);
   const claimCoupon = useCallback(
     (id: CouponId) =>
