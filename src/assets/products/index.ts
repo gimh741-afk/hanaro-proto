@@ -1,5 +1,6 @@
 import type { ProductId } from '../../data/products';
 import cabbageSheet from './cabbage.png';
+import garlicPhoto from './garlic.png';
 import kimjangSheet from './kimjang.png';
 import tangerineHanwooSheet from './tangerine-hanwoo.png';
 
@@ -45,4 +46,12 @@ export const PRODUCT_IMAGES: Partial<Record<ProductId, ProductImage>> = {
     src: cabbageSheet,
     crop: { width: '402.42%', height: '872.73%', left: '-20.61%', top: '-200%' },
   },
+};
+
+/**
+ * 고객 앱 상품 데이터에는 없는 찜 상품의 사진 (정사각 한 장, 카드 칸에 꽉 채운다).
+ * 깐마늘 1kg: 사용자가 제공한 사진 (2026-11-27).
+ */
+export const WISH_PHOTOS: Record<string, string> = {
+  'peeled-garlic': garlicPhoto,
 };

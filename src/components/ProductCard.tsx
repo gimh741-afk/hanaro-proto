@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { PRODUCT_IMAGES, type ProductImage } from '../assets/products';
+import { PRODUCT_IMAGES, WISH_PHOTOS, type ProductImage } from '../assets/products';
 import imageIcon from '../assets/icons/image-30.svg';
 import type { Product } from '../data/products';
 import { periodCaption, type FlyerItemInfo } from '../data/manager';
@@ -81,7 +81,11 @@ export function WatchCard({ item, storeName }: { item: WatchItem; storeName: str
     <article className={`${styles.card} ${styles.watch}`}>
       <div className={styles.link}>
         <div className={styles.image}>
-          <img className={styles.watchIcon} src={imageIcon} width={30} height={30} alt="" />
+          {WISH_PHOTOS[item.id] ? (
+            <img className={styles.cover} src={WISH_PHOTOS[item.id]} alt="" />
+          ) : (
+            <img className={styles.watchIcon} src={imageIcon} width={30} height={30} alt="" />
+          )}
         </div>
         <p className={styles.name}>{item.name}</p>
         <p className={styles.watchNote}>아직 {storeName} 행사 정보가 없어요</p>
@@ -102,7 +106,11 @@ export function FlyerItemCard({ id, info, tag }: { id: WishId; info: FlyerItemIn
     <article className={styles.card}>
       <div className={styles.link}>
         <div className={`${styles.image} ${styles.flyerImage}`}>
-          <img className={styles.watchIcon} src={imageIcon} width={30} height={30} alt="" />
+          {WISH_PHOTOS[id] ? (
+            <img className={styles.cover} src={WISH_PHOTOS[id]} alt="" />
+          ) : (
+            <img className={styles.watchIcon} src={imageIcon} width={30} height={30} alt="" />
+          )}
         </div>
         <p className={styles.name}>{info.name}</p>
         {info.price !== undefined && (

@@ -153,3 +153,16 @@
   place-items: center;
   background: var(--green-50);
 }
+
+/* 정사각 사진 한 장을 칸에 꽉 채운다 (깐마늘) */
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 행사 정보가 없는 찜 상품은 사진도 흐리게 — 회색 카드 */
+.watch .cover {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
